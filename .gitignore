@@ -1,0 +1,10 @@
+
+# dependencies
+/fr/node_modules
+
+# testing
+/fr/coverage
+
+# production
+/fr/build
+
