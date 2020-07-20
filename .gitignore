@@ -1,5 +1,8 @@
 .DS_Store
 
+# Spider
+*/__pycache__
+
 # dependencies
 /fr/node_modules
 
