@@ -14,12 +14,24 @@ public class Entity {
     @Property(name = "name")
     private String name;
 
+    @Property(name = "page_id")
+    private int page_id;
+
     @Property(name = "weight")
-    private float weight;
+    private double weight;
 
     @Relationship(type = "LinkTo")
     Set<Entity> entitySet = new HashSet<>();
 
+    public Entity(){};
+
+    public Entity(Long id,String name,int page_id,double weight){
+        this.id = id;
+        this.name = name;
+        this.page_id = page_id;
+        this.weight = weight;
+        this.entitySet = new HashSet<>();
+    }
 
     public Long getId(){
         return this.id;
@@ -35,10 +47,17 @@ public class Entity {
         this.name = name;
     }
 
-    public float getWeight(){
+    public int getPage_id(){
+        return this.page_id;
+    }
+    public void setPage_id(int page_id){
+        this.page_id = page_id;
+    }
+
+    public double getWeight(){
         return this.weight;
     }
-    public void setWeight(float weight){
+    public void setWeight(double weight){
         this.weight = weight;
     }
 
