@@ -20,13 +20,13 @@ public class Controller {
     @Autowired
     private EntryService entryService;
 
-    @GetMapping(value = "/neo4j")
+    @GetMapping(value = "/neo4j",produces = "application/json; charset=utf-8")
     public Map<String,Object> findInNeo4j(@RequestParam("keyword") String keyword){
         return entityService.findByKeyword(keyword);
     }
 
-    @GetMapping(value = "/mongodb")
+    @GetMapping(value = "/mongodb",produces = "application/json; charset=utf-8")
     public Entry findInMongodb(@RequestParam("keyword") String keyword){
-        return entryService.findByKeyword(keyword);
+        return entryService.findByTitle(keyword);
     }
 }

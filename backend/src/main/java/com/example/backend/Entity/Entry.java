@@ -1,56 +1,42 @@
 package com.example.backend.Entity;
 
+import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import org.bson.types.BasicBSONList;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 @Document(collection = "entry")
 public class Entry {
-    @Id
-    private ObjectId id;
-    private String keyword;
-    private BasicBSONList linkedwords;
-    private String intro;
-    private BasicBSONList dir;
+    private String title;
+    private int page_id;
+    private BasicBSONObject sections;
 
-    public ObjectId getId() {
-        return id;
-    }
-    public void setId(ObjectId id) {
-        this.id = id;
+    public Entry(){};
+
+    public Entry(String title,int page_id,BasicBSONObject sections){
+        this.title = title;
+        this.page_id = page_id;
+        this.sections = sections;
     }
 
-    public String getKeyword() {
-        return keyword;
+    public String getTitle() {
+        return title;
     }
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    public BasicBSONList getLinkedwords() {
-        return linkedwords;
-    }
-    public void setLinkedwords(BasicBSONList linkedwords) {
-        this.linkedwords = linkedwords;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getIntro() {
-        return intro;
+    public int getPage_id(){
+        return page_id;
     }
-    public void setIntro(String intro) {
-        this.intro = intro;
+    public void setPage_id(int page_id){
+        this.page_id = page_id;
     }
 
-    public BasicBSONList getDir() {
-        return dir;
+    public BasicBSONObject getSections() {
+        return sections;
     }
-    public void setDir(BasicBSONList dir) {
-        this.dir = dir;
+    public void setSections(BasicBSONObject sections) {
+        this.sections = sections;
     }
 }
