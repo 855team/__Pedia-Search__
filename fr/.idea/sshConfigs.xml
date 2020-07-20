@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="47.113.103.137" id="c4a574ea-7c27-4538-b6c1-dcc8a1b1c5d5" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+    </configs>
+  </component>
+</project>

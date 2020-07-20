@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b2d0e42c-7f93-4155-88b7-926381da56ae" name="Pedia-Search" url="http://47.113.103.137:8787">
+        <fileTransfer host="47.113.103.137" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/rossil/Tomcat/pedia_search/Root" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

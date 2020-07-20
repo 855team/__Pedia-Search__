@@ -5,10 +5,13 @@
 
 # dependencies
 /fr/node_modules
+/uitest/node_modules
 
 # testing
 /fr/coverage
 
 # production
 /fr/build
+
+
 
