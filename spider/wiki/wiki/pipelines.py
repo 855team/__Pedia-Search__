@@ -29,7 +29,7 @@ class WikiPipeline:
             transaction.create(node_from)
 
         for i in item_dict['linked_items']:
-            node_to = matcher.match('Entry', page_id=i).first()
+            node_to = matcher.match('Entry', page_id=i).first( )
             if node_to is None:
                 node_to = Node('Entry', page_id=i, title='', weight=0.0)
                 transaction.create(node_to)
