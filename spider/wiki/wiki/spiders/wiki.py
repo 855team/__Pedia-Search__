@@ -157,7 +157,7 @@ class wiki(scrapy.Spider):
                             'sections': make_sections(page.sections, link_dict, redirect_dict)
                         }
 
-                        yield WikiItem(page_id=page_id, title=title, sections=sections, linked_items=linked_items)
+                        yield WikiItem(page_id=int(page_id), title=title, sections=sections, linked_items=linked_items)
 
                 # namespace 不为0（冗余）
                 else:
