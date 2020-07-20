@@ -1,8 +1,8 @@
 import scrapy
 import requests
 from .. import wikiapi # hack自 wikipediaapi 项目源码，将部分request请求外移（方便利用scrapy的并发）
-# import wikiapi
 from wiki.items import WikiItem
+# import wikiapi
 
 
 verbose = True                                      # debug详细信息开关
@@ -31,29 +31,72 @@ def print_debug_info(info_type, *args):
     print('\n')
 
 
+# 标记超链接文本
+def make_linked_words(text, link_dict, redirect_dict):
+    linked_words = list()
+    for link_dict_title, link_dict_page_id in link_dict.items():
+        if link_dict_title in text:
+            linked_words.append({
+                'text': link_dict_title,
+                'page_id': link_dict_page_id
+            })
+
+    for redirect_dict_from, redirect_dict_to in redirect_dict.items():
+        if redirect_dict_from in text:
+            linked_words.append({
+                'text': redirect_dict_from,
+                'page_id': link_dict[redirect_dict_to]
+            })
+
+    return linked_words
+
+
 # 将内容包装成item
-def make_sections(sections):
+def make_sections(sections, link_dict, redirect_dict):
     ret = []
     for i in sections:
-        cur_section = {'title': i.title, 'text': i.text}
-        if len(i.sections) != 0:
-            cur_section['sections'] = make_sections(i.sections)
+        cur_section = {
+            'title': i.title,
+            'text': i.text,
+            'linked_words': make_linked_words(i.text, link_dict, redirect_dict),
+            'sections': make_sections(i.sections, link_dict, redirect_dict)
+        }
+
         ret.append(cur_section)
     return ret
 
 
-# 获取该词条链接到的 Main/Article 词条的 page_id 与 真名
+# 获取该词条链接到的 Main/Article 词条的 page_id 与 真名，与重定向信息
 def link_query(page_id):
     session = requests.Session()
     params = {'action': 'query', 'generator': 'links', 'pageids': page_id, 'format': 'json',  'redirects': 1, 'gplnamespace': 0, 'gpllimit': 500,}
     tmp_container = session.get(base_url, params=params).json()
-    link_list = list(tmp_container['query']['pages'].values())
+
+    redirect_dict = dict()
+    link_dict = dict()
+    for i in tmp_container['query']['pages'].values():
+        if i.get('missing') is None:
+            link_dict[i['title']] = i['pageid']
+    if tmp_container['query'].get('redirects') is not None:
+        for i in tmp_container['query']['redirects']:
+            redirect_dict[i['from']] = i['to']
+
     while 'continue' in tmp_container:
         params['gplcontinue'] = tmp_container['continue']['gplcontinue']
         tmp_container = session.get(base_url, params=params).json()
-        link_list += tmp_container['query']['pages'].values()
+        if tmp_container['query'].get('redirects') is not None:
+            for i in tmp_container['query']['redirects']:
+                redirect_dict[i['from']] = i['to']
+        for i in tmp_container['query']['pages'].values():
+            if i.get('missing') is None:
+                link_dict[i['title']] = i['pageid']
     session.close()
-    return link_list
+    return {
+        'redirect_dict': redirect_dict,
+        'link_dict': link_dict
+    }
+
+# print(link_query('10961'))
 
 
 # wiki爬虫，继承自scrapy.Spider
@@ -100,16 +143,18 @@ class wiki(scrapy.Spider):
                         linked_items = []
 
                         # 将被该词条链接的词条加入爬取队列，此处需要至少一个请求
-                        link_list = link_query(page_id)
-                        for i in link_list:
-                            if i.get('missing') is None:
-                                linked_items.append(i['pageid'])
-                                yield scrapy.Request(get_url_by_page_id(i['pageid']))
+                        query = link_query(page_id)
+                        link_dict = query['link_dict']
+                        redirect_dict = query['redirect_dict']
+                        for link_page_id in link_dict.values():
+                            linked_items.append(link_page_id)
+                            yield scrapy.Request(get_url_by_page_id(link_page_id))
 
                         sections = {
                             'title': 'summary',
                             'text': page.summary,
-                            'sections': make_sections(page.sections)
+                            'linked_words': make_linked_words(page.summary, link_dict, redirect_dict),
+                            'sections': make_sections(page.sections, link_dict, redirect_dict)
                         }
 
                         yield WikiItem(page_id=page_id, title=title, sections=sections, linked_items=linked_items)
