@@ -2,6 +2,7 @@ import React from "react";
 
 import InputBase from '@material-ui/core/InputBase';
 import withStyles from "@material-ui/core/styles/withStyles";
+import {withRouter} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -10,7 +11,8 @@ import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { ThemeProvider } from "@material-ui/core/styles";
 import { fade, Paper } from "@material-ui/core";
-import { darkTheme, lightTheme } from '../utils/theme'
+import { darkTheme, lightTheme } from '../utils/theme';
+import { history } from '../utils/history';
 import { Global } from "../utils/Global";
 
 /* 样式与theme相关的需要用 withStyles(theme => ({}))(xxx) 定义带样式的组件 */
@@ -114,16 +116,14 @@ class IndexView extends React.Component {
             theme: Global.get('theme'),
             searchText: ''
         };
-
-        window.onloadend = () => {
-            this.setState({
-                theme: Global.get('theme')
-            });
-        }
+    }
+    componentDidMount() {
+        this.setState({
+            theme: Global.get('theme')
+        });
     }
 
     render() {
-        const { classes } = this.props;
         return (
             <ThemeProvider theme={ this.state.theme }>
                 <Container>
@@ -173,4 +173,4 @@ class IndexView extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(IndexView);
+export default withRouter(withStyles(useStyles)(IndexView));
