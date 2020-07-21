@@ -12,7 +12,7 @@ public class EntryDaoImpl implements EntryDao {
     private EntryRepository entryRepository;
 
     @Override
-    public Entry findByKeyword(String keyword){
-        return entryRepository.findByKeyword(keyword);
+    public Entry findByTitle(String title){
+        return entryRepository.findByTitle(title);
     }
 }

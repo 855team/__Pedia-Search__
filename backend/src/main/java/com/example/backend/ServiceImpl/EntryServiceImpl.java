@@ -12,7 +12,7 @@ public class EntryServiceImpl implements EntryService {
     private EntryDao entryDao;
 
     @Override
-    public Entry findByKeyword(String keyword){
-        return entryDao.findByKeyword(keyword);
+    public Entry findByTitle(String title){
+        return entryDao.findByTitle(title);
     }
 }
