@@ -25,6 +25,7 @@ def get_url_by_page_id(page_id):
 
 # 输出debug信息
 def print_debug_info(info_type, *args):
+    # pass
     print(info_type, end=' ')
     for i in args:
         print(i, end=' ')
@@ -146,8 +147,9 @@ class wiki(scrapy.Spider):
                         query = link_query(page_id)
                         link_dict = query['link_dict']
                         redirect_dict = query['redirect_dict']
-                        for link_page_id in link_dict.values():
-                            linked_items.append(link_page_id)
+                        for link_title in link_dict:
+                            link_page_id = link_dict[link_title]
+                            linked_items.append({'page_id': link_page_id, 'title': link_title})
                             yield scrapy.Request(get_url_by_page_id(link_page_id))
 
                         sections = {

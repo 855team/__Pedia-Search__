@@ -34,6 +34,16 @@ CONCURRENT_REQUESTS_PER_IP = 8
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
+# # Redis
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"  #定义一个去重的类，用来将url去重
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"   #指定队列
+# SCHEDULER_PERSIST = True  #将程序持久化保存
+# REDIS_HOST = "59.110.238.59"
+# REDIS_PORT = "6379"
+# REDIS_PARAMS = {
+#    "password": "pedia_search"
+# }
+
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
 
