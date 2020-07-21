@@ -144,7 +144,106 @@ const relatedtags_template = {
         }
     ]
 };
-
+const context_template = {
+    "title":"上海",
+    "text":"上海是一座城市",
+    "linked_words":[
+        {
+            text: "文本4",
+            page_id: "123456"
+        }
+    ],
+    "sections":[{
+        "title":"历史",
+        "text":"参见balabala",
+        "linked_words":[
+            {
+                text: "文本5",
+                page_id: "123456"
+            }
+        ],
+        "sections":[
+            {
+                "title":"早期历史",
+                "text":"正文6",
+                "linked_words":[
+                    {
+                        text: "文本7",
+                        page_id: "123456"
+                    }
+                ],
+                sections: []
+            },
+            {
+                "title":"开埠初期",
+                "text":"正文",
+                "linked_words":[
+                    {
+                        text: "文本8",
+                        page_id: "123456"
+                    }
+                ],
+                "sections" :[
+                    {
+                        "title":"工人",
+                        "text":"正文9",
+                        "linked_words":[
+                            {
+                                text: "文本10",
+                                page_id: "123456"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },{
+        "title":"地理",
+        "text":"上海在海上",
+        "linked_words":[
+            {
+                text: "文本3",
+                page_id: "123456"
+            }
+        ],
+        "sections":[
+            {
+                "title":"河流",
+                "text":"正文1",
+                "linked_words":[
+                    {
+                        text: "文本2",
+                        page_id: "123456"
+                    }
+                ],
+                sections: []
+            },
+            {
+                "title":"地形",
+                "text":"正文11",
+                "linked_words":[
+                    {
+                        text: "文本12",
+                        page_id: "123456"
+                    }
+                ],
+                "sections" :[
+                    {
+                        "title":"山脉",
+                        "text":"正文",
+                        "linked_words":[
+                            {
+                                text: "文本13",
+                                page_id: "123456"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    ]
+}
 /** 搜索结果
  ** 布局：摘要（右）、搜索引擎结果（下）、学习来源（右）
  **/
@@ -153,6 +252,7 @@ class ResultView extends React.Component {
         super(props);
 
         this.state = {
+            context: context_template,
             relatedtags: relatedtags_template,
             gragh:0, //Gragh
             searchText: this.props.match.params.keyword
@@ -287,7 +387,8 @@ class ResultView extends React.Component {
                         <Grid item xs={1} />
                         <Grid item xs={5}>
                             <AreaWrapper>
-                                {this.state.gragh?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>:<Gragh />}
+                                {this.state.gragh?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>
+                                :<Gragh data={this.state.context} history={this.props.history}/>}
                             </AreaWrapper>
                         </Grid>
                         <Grid item xs={1} />

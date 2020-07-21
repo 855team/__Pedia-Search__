@@ -4,44 +4,68 @@ import 'materialize-css';
 import "../css/kg.css";
 import { Toast } from 'react-materialize';
 import * as d3 from 'd3';
+import NodeContextMenu from "../components/NodeContextMenu";
 
 class Gragh extends Component {
-
     constructor(props){
         super(props);
         this.state={
-            t1_text : '{' +
-                '"1": {"name": "数据结构","type": "学科"},\n' +
-                '"2": { "name": "二叉树", "type": "知识点"},\n' +
-                '"3": {"name": "链表","type": "知识点"},\n' +
-                '"4": {"name": "平衡二叉树","type": "知识点"},\n' +
-                '"5": {"name": "二叉树的结构讲解","url": "www.mooc.com/15.html",\n' +
-                '"type": "视频资源"},\n' +
-                '"6": {"name": "链表的反转",\n' +
-                '"url": "www.mooc.com/1.ppt",\n' +
-                '"type": "ppt资源"\n' +
-                '},\n' +
-                '"7": {"name": "闲节点","type": "闲"},\n' +
-                '"8": {"name": "闲节点2","type": "闲"},\n' +
-                '"9": {"name": "闲节点3","type": "闲"},\n' +
-                '"10": {"name": "芳芳老师","type": "老师"},\n' +
-                '"11": {"name": "月老师","type": "老师"}\n' +
-                "}",
-            t2_text : "[\n" +
-                '{ "source": 1, "target": 2, "rela": "包含", "type": "包含关系" },\n' +
-                '{ "source": 1, "target": 3, "rela": "包含", "type": "包含关系" },\n' +
-                '{ "source": 1, "target": 4, "rela": "包含", "type": "包含关系" },\n' +
-                '{ "source": 2, "target": 5, "rela": "视频课程", "type": "资源" },\n' +
-                '{ "source": 3, "target": 6, "rela": "ppt教程", "type": "资源" },\n' +
-                '{ "source": 3, "target": 7, "rela": "没关系" },\n' +
-                '{ "source": 8, "target": 9, "rela": "没关系" },\n' +
-                '{ "source": 10, "target": 5, "rela": "授课", "type": "行为" },\n' +
-                '{ "source": 11, "target": 6, "rela": "授课", "type": "行为" }\n' +
-                "]"
+            data: this.props.data,
+            t1_text : this.parsenode(),
+            t2_text : this.parselink(),
+            nodeRightClickMenus: []
         }
     }
     componentDidMount() {
         this.draw();
+    }
+    parsenode(){
+        let data=this.props.data;
+        let tmp=[];
+        tmp.push({ name: data.title, type:"关键词",text:data.text})
+        for(let j=0;j<data.linked_words.length;j++){
+            tmp.push({ name: data.linked_words[j].text, type:"tags",text:""})
+        }
+        if(data.sections){
+            tmp=this.handlesection_node(tmp,data.sections,1)
+        }
+        return tmp;
+    }
+    parselink(){
+        let data=this.props.data;
+        let tmp=[];
+        for(let j=0;j<data.linked_words.length;j++){
+            tmp.push({ source: 0,target:j+1,rela:"关联词", type:"关联词"})
+        }
+        if(data.sections){
+            tmp=this.handlesection_link(tmp,data.sections,0)
+        }
+        return tmp;
+    }
+    handlesection_node(array,sections,level){
+        for(let i=0;i<sections.length;i++){
+            array.push({ name: sections[i].title, type:"level"+level,text:sections[i].text})
+            for(let j=0;j<sections[i].linked_words.length;j++){
+                array.push({ name: sections[i].linked_words[j].text, type:"tags",text:""})
+            }
+            if(sections[i].sections){
+                array=this.handlesection_node(array,sections[i].sections,level+1)
+            }
+        }
+        return array;
+    }
+    handlesection_link(array,sections,source){
+        for(let i=0;i<sections.length;i++){
+            let num=array.length+1
+            array.push({ source: source,target:num,rela:"子目录", type:"子目录"})
+            for(let j=0;j<sections[i].linked_words.length;j++){
+                array.push({source: num,target:array.length+1,rela:"关联词", type:"关联词"})
+            }
+            if(sections[i].sections){
+                array=this.handlesection_link(array,sections[i].sections,num)
+            }
+        }
+        return array;
     }
 
     contentHook = (item)=>{
@@ -50,9 +74,10 @@ class Gragh extends Component {
     draw=()=> {
         try {
             let data = {}
-            data.nodes = JSON.parse(this.state.t1_text);
 
-            data.links = JSON.parse(this.state.t2_text);
+            data.nodes = this.state.t1_text;
+
+            data.links = this.state.t2_text;
             let config = {
                 width: document.getElementById("container").clientWidth,
                 height: document.getElementById("container").clientHeight
@@ -67,7 +92,6 @@ class Gragh extends Component {
         //data:nodes 至少需要一个name
         let nodeDict = data.nodes;
         let links = data.links;
-
         let nodes = {};
 
         links.forEach((link)=> {
@@ -251,8 +275,6 @@ class Gragh extends Component {
             })
             .attr("r", 30)
             .on("click", function (node) {
-                //单击时让连接线加粗
-                //再次点击还原
                 edges_line.style("stroke-width", function (line) {
                     //当与连接点连接时变粗
                     if ((line.source.name == node.name || line.target.name == node.name) ) {
@@ -284,23 +306,31 @@ class Gragh extends Component {
                 }
                 lastFocusNode = node;
             })
-            .on("dblclick", function (d) {
-                //双击节点时节点恢复拖拽
-                d.fixed = false;
-            })
-            .on("mouseover", function (d) {
-                //config：替换成需要回显的html
-                let content;
-                if (config.contentHook){
-                    content = config.contentHook(d);
-                }else{
-                    content = config.content;
-                }
-                tooltip.html(content)
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY + 20) + "px")
-                    .style("opacity", 1.0);
+            .on("dblclick", function (node) {
 
+                let nodeRightClickMenus = [];
+
+                // When ctrl is pressed, multiple context menu's are allowed
+                // Default is only 1
+
+                nodeRightClickMenus = this.state.nodeRightClickMenus;
+
+
+                const clickOffset = 1;
+                let rightClickMenuValue = {
+                    'x':node.x+clickOffset,
+                    'y':node.y+clickOffset,
+                    'node':node
+                };
+
+                // Add new context menu
+                nodeRightClickMenus.push(rightClickMenuValue);
+                this.setState({
+                    nodeRightClickMenus: nodeRightClickMenus,
+                });
+            })
+            .on("mouseover", function (node) {
+                ;
             })
             .on("mousemove", function (d) {
                 tooltip.style("left", (d3.event.pageX) + "px")
@@ -417,6 +447,7 @@ class Gragh extends Component {
     }
     render(){
         return(
+            <div>
             <div className="row" style={{marginTop: 10,display: "flex"}}>
                 <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
                     <div className="card">
@@ -424,6 +455,14 @@ class Gragh extends Component {
                         </div>
                     </div>
                 </div>
+            </div>
+            {this.state.nodeRightClickMenus.map(function(nodeRightClickMenu){
+                return (<NodeContextMenu
+                x={nodeRightClickMenu.x}
+                y={nodeRightClickMenu.y}
+                node={nodeRightClickMenu.node}
+                key={nodeRightClickMenu.node.id} />);
+            })}
             </div>
         )
     }

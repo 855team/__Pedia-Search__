@@ -47,7 +47,6 @@ class Gragh2 extends Component {
             let data = {}
             data.nodes = this.state.t1_text;
             data.links = this.state.t2_text;
-            console.log(data);
             let config = {
                 width: document.getElementById("container2").clientWidth,
                 height: document.getElementById("container2").clientHeight
@@ -62,7 +61,9 @@ class Gragh2 extends Component {
         //data:nodes 至少需要一个name
         let nodeDict = data.nodes;
         let links = data.links;
-        let his=this.props.history
+        let his=this.props.history;
+        console.log(data)
+
         let nodes = {};
 
         links.forEach((link)=> {
