@@ -1,5 +1,6 @@
 import React from "react";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import { history } from "./utils/history";
 import IndexView from "./view/IndexView";
 import ResultView from "./view/ResultView";
@@ -20,7 +21,7 @@ class BasicRouter extends React.Component {
             <Router history={ history }>
                 <Switch>
                     <Route exact path="/index" component={ IndexView }/>
-                    <Route path="/search/:keyword" component={ ResultView }/>
+                    <Route exact path="/search/:keyword" component={ ResultView }/>
                     <Redirect to="/index"/>
                 </Switch>
             </Router>

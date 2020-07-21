@@ -1,17 +1,24 @@
 import React from "react";
-
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchBrief from "../components/SearchBrief";
 import StudySourceBrief from "../components/StudySourceBrief";
 import Skeleton from "@material-ui/lab/Skeleton";
-import ajaxRequest from "../utils/Ajax";
+import {postRequest_v2} from "../utils/Ajax";
 import Typography from "@material-ui/core/Typography";
 import Grid from '@material-ui/core/Grid';
 import AbstractCard from "../components/AbstractCard";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Box, fade } from "@material-ui/core";
 import { Global } from "../utils/Global";
+import { history } from '../utils/history';
+import Gragh from "../components/Gragh";
+import Gragh2 from "../components/Gragh2";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import {darkTheme, lightTheme} from "../utils/theme";
+import Brightness5SharpIcon from "@material-ui/icons/Brightness5Sharp";
+import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 /** 整体容器（背景） **/
 const Container = withStyles((theme) => ({
@@ -27,7 +34,7 @@ const SearchBarWrapper = withStyles((theme) => ({
     root: {
         width: '100vw',
         height: '80px',
-        background: theme.status.resultTop,
+        // background: theme.status.resultTop,
         borderBottom: 'grey solid 1px'
     }
 }))(Box);
@@ -39,7 +46,8 @@ const SearchInput = withStyles((theme) => ({
         marginTop: '15px'
     },
     input: {
-        borderRadius: 30,
+        borderRadius:
+            30,
         position: 'relative',
         backgroundColor: theme.palette.common.white,
         border: '5px solid #ced4da',
@@ -123,14 +131,18 @@ const useStyles = {
 };
 
 /** 空数据模板 **/
-const dataTemplate = {
-    title: '',
-    tags: [],
-    des: [],
-    tagLinks: [],
-    desLinks: [],
-    props: [],
-    urls: []
+const relatedtags_template = {
+    title:"上海",
+    linked_words:[
+        {
+            title:"中国",
+            weight:3
+        },
+        {
+            title:"川建国",
+            weight:2
+        }
+    ]
 };
 
 /** 搜索结果
@@ -141,18 +153,14 @@ class ResultView extends React.Component {
         super(props);
 
         this.state = {
-            data: dataTemplate,
-            studySourceRelations: [],
-            dataReady: false,
+            relatedtags: relatedtags_template,
+            gragh:0, //Gragh
             searchText: this.props.match.params.keyword
         };
-
-        this.postRequest = this.postRequest.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount() {
-        this.postRequest(this.props.match.params.keyword);
+        //this.postRequest(this.props.match.params.keyword);
     }
 
     /** 向后端口请求搜索结果数据 **/
@@ -214,10 +222,9 @@ class ResultView extends React.Component {
             });
         };
 
-        let data = new FormData();
-        data.append('keyword', keyword);
+        let data = {"keyword": keyword};
 
-        ajaxRequest('/api/handle', data, callback, 'POST');
+        postRequest_v2('http://121.199.61.129:7777', data, callback);
     }
 
     render() {
@@ -253,60 +260,37 @@ class ResultView extends React.Component {
                                 />
                             </Grid>
                         </Grid>
+                        <ToggleButtonGroup style={{ position: 'absolute', right: '5%', top: '3%' }}>
+                            <ToggleButton
+                                value="left"
+                                onClick={() => {
+                                    this.setState({
+                                        gragh:0
+                                    })
+                                }}
+                            >
+                                <Brightness5SharpIcon />
+                            </ToggleButton>
+                            <ToggleButton
+                                value="right"
+                                onClick={() => {
+                                    this.setState({
+                                        gragh:1
+                                    })
+                                }}
+                            >
+                                <NightsStaySharpIcon />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
                     </SearchBarWrapper>
                     <Grid container>
-                        <Grid item xs={2} />
+                        <Grid item xs={1} />
                         <Grid item xs={5}>
                             <AreaWrapper>
-                                <AbstractCard data={ this.state.data } dataReady={ this.state.dataReady } />
-                            </AreaWrapper>
-                            <AreaWrapper>
-                                {
-                                    this.state.dataReady ?
-                                        this.state.data.urls.map((ite, index) =>
-                                            <SearchBriefWrapper key={ 'SearchBriefWrapper-' + index }>
-                                                <SearchBrief data={ ite }/>
-                                            </SearchBriefWrapper>
-                                        )
-                                        : [0, 1].map((ite) => (
-                                            <SearchBriefWrapper key={ 'SearchBriefWrapper-' + ite }>
-                                                <Skeleton variant="rect" width={ '100%' } height={ '117px' } style={{ borderRadius: '7px' }} />
-                                            </SearchBriefWrapper>
-                                        ))
-                                }
+                                {this.state.gragh?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>:<Gragh />}
                             </AreaWrapper>
                         </Grid>
                         <Grid item xs={1} />
-                        <Grid item xs={3} >
-                            <AreaWrapper>
-                                <StudySourceBriefTitle variant="subtitle1">主要学习来源</StudySourceBriefTitle>
-                                {
-                                    this.state.dataReady ?
-                                        this.state.studySourceRelations.map((ite, index) => (
-                                            <StudySourceBriefWrapper key={ 'StudySourceBriefWrapper-' + index }>
-                                                <StudySourceBrief
-                                                    data={ ite }
-                                                    tagColor={['#90ee90cc', '#ff0000bb']}
-                                                    desColor={['#90ee90', '#ff0000']}
-                                                    callback={(tagIdx, desIdx, tagColor, desColor) => {
-                                                        tagIdx.forEach((ite) => {
-                                                            document.getElementById('tagChip-' + ite).style.backgroundColor = tagColor
-                                                        });
-                                                        desIdx.forEach((ite) => {
-                                                            document.getElementById('desLine-' + ite).style.borderBottom = '2px solid ' + desColor;
-                                                        });
-                                                    }}
-                                                />
-                                            </StudySourceBriefWrapper>
-                                        )) : [0, 1, 2, 3, 4, 5, 6, 7].map((ite) =>
-                                            <StudySourceBriefWrapper key={ 'StudySourceBriefWrapper-' + ite }>
-                                                <Skeleton variant="rect" width={'100%'} height={'60px'}
-                                                          style={{ borderRadius: '7px' }}/>
-                                            </StudySourceBriefWrapper>
-                                        )
-                                }
-                            </AreaWrapper>
-                        </Grid>
                     </Grid>
                     <Box style={{ height: '7vh' }} />
                 </Container>

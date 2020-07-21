@@ -3,6 +3,11 @@
   <component name="SshConfigs">
     <configs>
       <sshConfig host="47.113.103.137" id="c4a574ea-7c27-4538-b6c1-dcc8a1b1c5d5" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="9c1766cc-11b6-4de6-b77c-e213d4dd5d68" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="32974de1-dfd0-4253-a457-f2db68502de0" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="26a0a4a9-694c-472e-8829-ccd71d9a748e" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="fa4dcad9-4c23-4f00-8d0a-8cc1ddbd3ec4" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="9546b1c7-4fc2-4c7d-bca8-6e1149badad0" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
     </configs>
   </component>
 </project>

@@ -1,18 +1,53 @@
-export default function ajaxRequest(url, data, callback, method) {
-    let header = {
-        method: method,
-        body: data
-    };
+let postRequest_v2 = (url,data,callback) => {
+    let formData=new FormData();
 
-    console.log(header);
+    for(let p in data){
+        if(data.hasOwnProperty(p)){
+            formData.append(p,data[p])
+        }
+    }
 
-    fetch(url, header).then((response) => {
-        response.json().then((json) => {
-            callback(JSON.parse(json));
-        }).catch((error) => {
+    let opts={
+        method: "POST",
+        mode:"no-cors",
+        body: formData,
+        //credentials: "include"
+    }
+
+    fetch(url,opts)
+        .then((response)=>{
+            return response.json()
+        })
+        .then((data)=>{
+            callback(data);
+        })
+        .catch((error)=>{
             console.log(error);
-        });
-    }).catch((error) => {
-        console.log(error);
-    });
+        })
 }
+
+let postRequest = (url,json,callback) => {
+
+    let opts={
+        method: "POST",
+        mode:"no-cors",
+        body: JSON.stringify(json),
+        headers:{
+            'Content-Type':'application/json'
+        },
+        //credentials: "include"
+    }
+
+    fetch(url,opts)
+        .then((response)=>{
+            return response.json()
+        })
+        .then((data)=>{
+            callback(data);
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+}
+
+export{postRequest_v2,postRequest};
