@@ -4,10 +4,12 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-from w3lib.http import basic_auth_header
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+from scrapy.exceptions import IgnoreRequest
+
 
 
 class WikiSpiderMiddleware:
@@ -79,7 +81,6 @@ class WikiDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        request.meta['proxy'] = 'http://192.168.1.109:10809'
         return None
 
     def process_response(self, request, response, spider):
