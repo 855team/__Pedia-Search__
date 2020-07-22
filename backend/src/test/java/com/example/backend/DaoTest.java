@@ -24,21 +24,21 @@ public class DaoTest {
 
     @Test
     public void entityDaoTest(){
-        Entity entity = entityDao.findByName("上海");
+        Entity entity = entityDao.findByName("历史");
         Assertions.assertAll(
-                () -> Assertions.assertEquals("上海",entity.getName()),
-                () -> Assertions.assertEquals(2,entity.getEntitySet().size())
+                () -> Assertions.assertEquals("历史",entity.getName()),
+                () -> Assertions.assertEquals(272,entity.getEntitySet().size())
         );
     }
 
     @Test
     public void entryDaoTest(){
-        Entry entry = entryDao.findByTitle("上海");
+        Entry entry = entryDao.findByTitle("历史");
         LinkedHashMap<String,Object> diritem = (LinkedHashMap<String,Object>)
                 ((ArrayList<Object>) entry.getSections().get("sections")).get(0);
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("上海",entry.getTitle()),
+                () -> Assertions.assertEquals("历史",entry.getTitle()),
                 () -> Assertions.assertTrue(diritem.containsKey("title")),
                 () -> Assertions.assertTrue(diritem.containsKey("text")),
                 () -> Assertions.assertTrue(diritem.containsKey("linked_words")),

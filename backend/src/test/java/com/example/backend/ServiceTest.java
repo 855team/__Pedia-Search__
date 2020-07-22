@@ -59,8 +59,13 @@ class ServiceTest {
     @Test
     public void entryServiceTest(){
         BasicBSONObject bsonObject = new BasicBSONObject();
-        bsonObject.append("title","文化");
+        bsonObject.append("title","summary");
         bsonObject.append("text","balabala");
+
+        BasicBSONList linkedwords = new BasicBSONList();
+        linkedwords.add("1");
+        linkedwords.add("2");
+        bsonObject.append("linked_words",linkedwords);
 
         BasicBSONList sections = new BasicBSONList();
         bsonObject.append("sections",sections);
@@ -69,6 +74,11 @@ class ServiceTest {
 
         when(entryDao.findByTitle(anyString())).thenReturn(entry);
 
-        Assertions.assertEquals(entry, entryService.findByTitle("上海"));
+        Assertions.assertAll(
+                ()->Assertions.assertEquals("上海", entryService.findByTitle("上海").get("title")),
+                ()->Assertions.assertEquals("balabala",entryService.findByTitle("上海").get("text")),
+                ()->Assertions.assertEquals(2,((BasicBSONList)entryService.findByTitle("上海").get("linked_words")).size()),
+                ()->Assertions.assertTrue(entryService.findByTitle("上海").containsKey("sections"))
+        );
     }
 }

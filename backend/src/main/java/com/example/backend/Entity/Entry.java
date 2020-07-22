@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.bson.types.BasicBSONList;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "entry")
+@Document(collection = "pedia_search")
 public class Entry {
     private String title;
     private int page_id;
