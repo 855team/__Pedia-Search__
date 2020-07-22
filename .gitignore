@@ -1,10 +1,17 @@
+.DS_Store
+
+# Spider
+*/__pycache__
 
 # dependencies
 /fr/node_modules
+/uitest/node_modules
 
 # testing
 /fr/coverage
 
 # production
 /fr/build
+
+
 
