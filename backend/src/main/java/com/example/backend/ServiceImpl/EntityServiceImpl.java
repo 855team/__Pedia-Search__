@@ -19,16 +19,22 @@ public class EntityServiceImpl implements EntityService {
 
         Map<String,Object> map = new HashMap<String, Object>();
 
-        map.put("title",target.getName());
-
         List<Map<String,Object>> linkedList = new LinkedList<>();
 
-        for(Entity entity:target.getEntitySet())
+        if(target!=null)
         {
-            Map<String,Object> itemMap = new HashMap<>();
-            itemMap.put("title",entity.getName());
-            itemMap.put("weight",entity.getWeight());
-            linkedList.add(itemMap);
+            map.put("title",target.getName());
+            for(Entity entity:target.getEntitySet())
+            {
+                Map<String,Object> itemMap = new HashMap<>();
+                itemMap.put("title",entity.getName());
+                itemMap.put("weight",entity.getWeight());
+                linkedList.add(itemMap);
+            }
+        }
+        else
+        {
+            map.put("title",keyword);
         }
         map.put("linked_words",linkedList);
 
