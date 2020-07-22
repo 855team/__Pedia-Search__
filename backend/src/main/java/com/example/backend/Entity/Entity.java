@@ -5,13 +5,13 @@ import org.neo4j.ogm.annotation.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@NodeEntity(label = "Entity")
+@NodeEntity(label = "Entry")
 public class Entity {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Property(name = "name")
+    @Property(name = "title")
     private String name;
 
     @Property(name = "page_id")
@@ -20,7 +20,7 @@ public class Entity {
     @Property(name = "weight")
     private double weight;
 
-    @Relationship(type = "LinkTo")
+    @Relationship(type = "linkTo")
     Set<Entity> entitySet = new HashSet<>();
 
     public Entity(){};

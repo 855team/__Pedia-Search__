@@ -2,6 +2,7 @@ import scrapy
 import requests
 from .. import wikiapi # hack自 wikipediaapi 项目源码，将部分request请求外移（方便利用scrapy的并发）
 from wiki.items import WikiItem
+from scrapy_redis.spiders import RedisSpider
 # import wikiapi
 
 
@@ -25,11 +26,11 @@ def get_url_by_page_id(page_id):
 
 # 输出debug信息
 def print_debug_info(info_type, *args):
-    # pass
-    print(info_type, end=' ')
-    for i in args:
-        print(i, end=' ')
-    print('\n')
+    pass
+    # print(info_type, end=' ')
+    # for i in args:
+    #     print(i, end=' ')
+    # print('\n')
 
 
 # 标记超链接文本
@@ -96,8 +97,6 @@ def link_query(page_id):
         'redirect_dict': redirect_dict,
         'link_dict': link_dict
     }
-
-# print(link_query('10961'))
 
 
 # wiki爬虫，继承自scrapy.Spider
