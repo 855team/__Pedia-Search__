@@ -3,18 +3,29 @@ import "../css/self.css";
 import 'materialize-css';
 import "../css/kg.css";
 import { Toast } from 'react-materialize';
+import {Layout,Card} from 'antd';
 import * as d3 from 'd3';
 import NodeContextMenu from "../components/NodeContextMenu";
+const { Header, Footer, Sider, Content } = Layout;
 
 class Gragh extends Component {
     constructor(props){
         super(props);
         this.state={
             data: this.props.data,
+            originnode: this.parsenode(),
+            originlink : this.parselink(),
             t1_text : this.parsenode(),
             t2_text : this.parselink(),
-            nodeRightClickMenus: []
+            title:"未选中节点",
+            content:""
         }
+    }
+    setcard=(title,content)=>{
+        this.setState({
+            title:title,
+            content:content
+        })
     }
     componentDidMount() {
         this.draw();
@@ -71,7 +82,11 @@ class Gragh extends Component {
     contentHook = (item)=>{
         return "<div>"+item.name+"</div>"
     }
+    demo=(name)=>{
+        //重新画图，还没想到好办法
+    }
     draw=()=> {
+        console.log(this.state)
         try {
             let data = {}
 
@@ -82,13 +97,13 @@ class Gragh extends Component {
                 width: document.getElementById("container").clientWidth,
                 height: document.getElementById("container").clientHeight
             }
-            this.initKG(data, config, "#container")
+            this.initKG(data, config, "#container",this.setcard,this.demo)
         } catch (err) {
             Toast('渲染存在异常', 2000)
             console.info(err)
         }
     }
-    initKG = (data, config, container)=> {
+    initKG = (data, config, container,func,show)=> {
         //data:nodes 至少需要一个name
         let nodeDict = data.nodes;
         let links = data.links;
@@ -275,7 +290,8 @@ class Gragh extends Component {
             })
             .attr("r", 30)
             .on("click", function (node) {
-                edges_line.style("stroke-width", function (line) {
+                show(node.name);
+                /*edges_line.style("stroke-width", function (line) {
                     //当与连接点连接时变粗
                     if ((line.source.name == node.name || line.target.name == node.name) ) {
                         if (line.focus && node.focus){
@@ -304,30 +320,10 @@ class Gragh extends Component {
                 }else{
                     d3.select(this).style('stroke-width', 1);
                 }
-                lastFocusNode = node;
+                lastFocusNode = node;*/
             })
             .on("dblclick", function (node) {
-
-                let nodeRightClickMenus = [];
-
-                // When ctrl is pressed, multiple context menu's are allowed
-                // Default is only 1
-
-                nodeRightClickMenus = this.state.nodeRightClickMenus;
-
-
-                const clickOffset = 1;
-                let rightClickMenuValue = {
-                    'x':node.x+clickOffset,
-                    'y':node.y+clickOffset,
-                    'node':node
-                };
-
-                // Add new context menu
-                nodeRightClickMenus.push(rightClickMenuValue);
-                this.setState({
-                    nodeRightClickMenus: nodeRightClickMenus,
-                });
+                func(node.name,node.text);
             })
             .on("mouseover", function (node) {
                 ;
@@ -448,21 +444,24 @@ class Gragh extends Component {
     render(){
         return(
             <div>
-            <div className="row" style={{marginTop: 10,display: "flex"}}>
-                <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
-                    <div className="card">
-                        <div id="container" className="card-image container" style={{width:"1156px", height:"500px"}}>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {this.state.nodeRightClickMenus.map(function(nodeRightClickMenu){
-                return (<NodeContextMenu
-                x={nodeRightClickMenu.x}
-                y={nodeRightClickMenu.y}
-                node={nodeRightClickMenu.node}
-                key={nodeRightClickMenu.node.id} />);
-            })}
+                <Layout style={{width:1100,height:550,opacity:0.9}}>
+                        <Content>
+                            <div  style={{marginTop: 10,display: "flex"}}>
+                                <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
+                                    <div className="card">
+                                        <div id="container" className="card-image container" style={{width:"1000px", height:"500px"}}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Content>
+                        <Sider width={300} className="site-layout-background">
+                            <Card title={this.state.title}  style={{ height:550,width: 300 }}>
+                                <p>{this.state.content}</p>
+                            </Card>
+                        </Sider>
+                </Layout>
+
             </div>
         )
     }

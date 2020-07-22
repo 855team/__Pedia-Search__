@@ -146,7 +146,7 @@ const relatedtags_template = {
 };
 const context_template = {
     "title":"上海",
-    "text":"上海是一座城市",
+    "text":"上海是一座城市,上海不只是一座城市。上海是一座海上的城市，这句话说的是错的。这句话说的为什么是错的，因为上海学生不认同这个观点。我怎么会说这么多废话，因为想让句子长一点",
     "linked_words":[
         {
             text: "文本4",

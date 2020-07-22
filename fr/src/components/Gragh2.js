@@ -251,7 +251,7 @@ class Gragh2 extends Component {
                 //再次点击还原
                 edges_line.style("stroke-width", function (line) {
                     //当与连接点连接时变粗
-                    if ((line.source.name == node.name || line.target.name == node.name) ) {
+                    if ((line.source.name === node.name || line.target.name === node.name) ) {
                         if (line.focus && node.focus){
                             line.focus = false;
                             return 1;
