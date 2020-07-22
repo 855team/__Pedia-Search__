@@ -28,39 +28,53 @@ class Gragh extends Component {
         })
     }
     componentDidMount() {
-        this.draw();
+        if(this.props.data){
+            console.log("mount",this.props.data)
+            this.draw();
+        }
+
     }
+
     parsenode(){
         let data=this.props.data;
         let tmp=[];
-        tmp.push({ name: data.title, type:"关键词",text:data.text})
-        for(let j=0;j<data.linked_words.length;j++){
-            tmp.push({ name: data.linked_words[j].text, type:"tags",text:""})
-        }
-        if(data.sections){
-            tmp=this.handlesection_node(tmp,data.sections,1)
+        if(data){
+            tmp.push({ name: data.title, type:"关键词",text:data.text,index:0,weight:1})
+            if(data.linked_words)
+                for(let j=0;j<data.linked_words.length;j++){
+                    tmp.push({ name: data.linked_words[j].text, type:"tags",text:"",weight:1,index:j+1})
+                }
+            if(data.sections){
+                tmp=this.handlesection_node(tmp,data.sections,1,data.linked_words.length)
+            }
         }
         return tmp;
     }
     parselink(){
         let data=this.props.data;
         let tmp=[];
-        for(let j=0;j<data.linked_words.length;j++){
-            tmp.push({ source: 0,target:j+1,rela:"关联词", type:"关联词"})
-        }
-        if(data.sections){
-            tmp=this.handlesection_link(tmp,data.sections,0)
+        if(data){
+            if(data.linked_words)
+                for(let j=0;j<data.linked_words.length;j++){
+                    tmp.push({ source: 0,target:j+1,rela:"关联词", type:"关联词"})
+                }
+            if(data.sections){
+                tmp=this.handlesection_link(tmp,data.sections,0)
+            }
         }
         return tmp;
     }
-    handlesection_node(array,sections,level){
+    handlesection_node(array,sections,level,index){
         for(let i=0;i<sections.length;i++){
-            array.push({ name: sections[i].title, type:"level"+level,text:sections[i].text})
+            index++;
+            array.push({ name: sections[i].title, type:"level"+level,text:sections[i].text,index:index,weight:1})
+            if(sections[i].linked_words)
             for(let j=0;j<sections[i].linked_words.length;j++){
-                array.push({ name: sections[i].linked_words[j].text, type:"tags",text:""})
+                index++;
+                array.push({ name: sections[i].linked_words[j].text, type:"tags",text:"",index:index,weight:1})
             }
             if(sections[i].sections){
-                array=this.handlesection_node(array,sections[i].sections,level+1)
+                array=this.handlesection_node(array,sections[i].sections,level+1,index)
             }
         }
         return array;
@@ -69,6 +83,7 @@ class Gragh extends Component {
         for(let i=0;i<sections.length;i++){
             let num=array.length+1
             array.push({ source: source,target:num,rela:"子目录", type:"子目录"})
+            if(sections[i].linked_words)
             for(let j=0;j<sections[i].linked_words.length;j++){
                 array.push({source: num,target:array.length+1,rela:"关联词", type:"关联词"})
             }
@@ -86,7 +101,7 @@ class Gragh extends Component {
         //重新画图，还没想到好办法
     }
     draw=()=> {
-        console.log(this.state)
+
         try {
             let data = {}
 
@@ -97,6 +112,7 @@ class Gragh extends Component {
                 width: document.getElementById("container").clientWidth,
                 height: document.getElementById("container").clientHeight
             }
+            console.log("draw",data)
             this.initKG(data, config, "#container",this.setcard,this.demo)
         } catch (err) {
             Toast('渲染存在异常', 2000)
@@ -108,13 +124,13 @@ class Gragh extends Component {
         let nodeDict = data.nodes;
         let links = data.links;
         let nodes = {};
-
+        console.log("h",data)
         links.forEach((link)=> {
             //利用source和target名称进行连线以及节点的确认
             link.source = nodeDict[link.source]
-            nodes[link.source.name] = link.source
+            nodes[link.source.index] = link.source
             link.target = nodeDict[link.target]
-            nodes[link.target.name] = link.target
+            nodes[link.target.index] = link.target
         });
 
         //默认的节点配色方案
@@ -288,7 +304,7 @@ class Gragh extends Component {
                 //config:边框色
                 return colorDict[node.type].stroke;
             })
-            .attr("r", 30)
+            .attr("r", 25)
             .on("click", function (node) {
                 show(node.name);
                 /*edges_line.style("stroke-width", function (line) {

@@ -45,8 +45,8 @@ class Gragh2 extends Component {
     draw=()=> {
         try {
             let data = {}
-            data.nodes = this.state.t1_text;
-            data.links = this.state.t2_text;
+            data.nodes = this.state.t1_text.slice(0,15);
+            data.links = this.state.t2_text.slice(0,14);
             let config = {
                 width: document.getElementById("container2").clientWidth,
                 height: document.getElementById("container2").clientHeight
@@ -282,6 +282,7 @@ class Gragh2 extends Component {
             })
             .on("dblclick", function (node) {
                 his.push("/search/"+node.name);
+                window.location.reload();
             })
             .on("mouseover", function (d) {
                 //config：替换成需要回显的html
