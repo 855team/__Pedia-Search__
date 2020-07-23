@@ -1,17 +1,12 @@
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputBase from "@material-ui/core/InputBase";
-import SearchBrief from "../components/SearchBrief";
-import StudySourceBrief from "../components/StudySourceBrief";
-import Skeleton from "@material-ui/lab/Skeleton";
-import {postRequest_v2} from "../utils/Ajax";
+import {postRequest,postRequest_v2} from "../utils/Ajax";
 import Typography from "@material-ui/core/Typography";
 import Grid from '@material-ui/core/Grid';
-import AbstractCard from "../components/AbstractCard";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Box, fade } from "@material-ui/core";
 import { Global } from "../utils/Global";
-import { history } from '../utils/history';
 import Gragh from "../components/Gragh";
 import Gragh2 from "../components/Gragh2";
 import ToggleButton from "@material-ui/lab/ToggleButton";
@@ -19,6 +14,7 @@ import {darkTheme, lightTheme} from "../utils/theme";
 import Brightness5SharpIcon from "@material-ui/icons/Brightness5Sharp";
 import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import {withRouter} from "react-router-dom";
 
 /** 整体容器（背景） **/
 const Container = withStyles((theme) => ({
@@ -146,7 +142,7 @@ const relatedtags_template = {
 };
 const context_template = {
     "title":"上海",
-    "text":"上海是一座城市",
+    "text":"上海是一座城市,上海不只是一座城市。上海是一座海上的城市，这句话说的是错的。这句话说的为什么是错的，因为上海学生不认同这个观点。我怎么会说这么多废话，因为想让句子长一点",
     "linked_words":[
         {
             text: "文本4",
@@ -252,79 +248,40 @@ class ResultView extends React.Component {
         super(props);
 
         this.state = {
-            context: context_template,
-            relatedtags: relatedtags_template,
-            gragh:0, //Gragh
+            context: null,
+            relatedtags: null,
+            gragh:-1, //Gragh
             searchText: this.props.match.params.keyword
         };
     }
 
     componentDidMount() {
-        //this.postRequest(this.props.match.params.keyword);
+        this.postRequest(this.props.match.params.keyword);
     }
 
     /** 向后端口请求搜索结果数据 **/
     postRequest(keyword) {
-        const callback = (json) => {
-            console.log(json);
-            let map = new Map();
-            json.tagLinks.forEach((ite) => {
-                if (!map.has(ite.url + ite.title)) {
-                    let tmp = {
-                        title: '',
-                        url: '',
-                        tagIdx: [],
-                        desIdx: []
-                    };
-                    tmp.title = ite.title;
-                    tmp.url = ite.url;
-                    tmp.tagIdx = ite.idx;
-                    map.set(ite.url + ite.title, tmp);
-                } else {
-                    let tmp = map.get(ite.url + ite.title);
-                    tmp.tagIdx = tmp.tagIdx.concat(ite.idx);
-                    map.set(ite.url + ite.title, tmp);
-                }
-            });
-            json.desLinks.forEach((ite) => {
-                if (!map.has(ite.url + ite.title)) {
-                    let tmp = {
-                        title: '',
-                        url: '',
-                        tagIdx: [],
-                        desIdx: []
-                    };
-                    tmp.title = ite.title;
-                    tmp.url = ite.url;
-                    tmp.desIdx = ite.idx;
-                    map.set(ite.url + ite.title, tmp);
-                } else {
-                    let tmp = map.get(ite.url + ite.title);
-                    tmp.desIdx = tmp.desIdx.concat(ite.idx);
-                    map.set(ite.url + ite.title, tmp);
-                }
-            });
-
-            let mapToArray = [];
-            map.forEach((ite) => {
-                let tmp = ite;
-                let deDup = new Set(ite.tagIdx);
-                tmp.tagIdx = Array.from(deDup);
-                deDup = new Set(ite.desIdx);
-                tmp.desIdx = Array.from(deDup);
-
-                mapToArray.push(tmp);
+        const callback1 = (json) => {
+            this.setState({
+                context:json
             });
             this.setState({
-                data: json,
-                studySourceRelations: mapToArray,
-                dataReady: true
-            });
+                gragh:0
+            })
         };
-
+        const callback2 = (json) => {
+            this.setState({
+                relatedtags:json
+            });
+            this.setState({
+                gragh:0
+            })
+        };
         let data = {"keyword": keyword};
+        postRequest_v2('http://49.235.245.206:8080/searchwiki', data, callback1);
+        postRequest_v2('http://49.235.245.206:8080/searchrelated', data, callback2);
 
-        postRequest_v2('http://121.199.61.129:7777', data, callback);
+
     }
 
     render() {
@@ -354,7 +311,7 @@ class ResultView extends React.Component {
                                                 dataReady: false
                                             });
                                             this.props.history.push('/search/' + this.state.searchText);
-                                            this.postRequest(this.state.searchText);
+                                            window.location.reload();
                                         }
                                     }}
                                 />
@@ -387,8 +344,8 @@ class ResultView extends React.Component {
                         <Grid item xs={1} />
                         <Grid item xs={5}>
                             <AreaWrapper>
-                                {this.state.gragh?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>
-                                :<Gragh data={this.state.context} history={this.props.history}/>}
+                                {this.state.gragh==-1?null:(this.state.gragh==1?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>
+                                :<Gragh data={this.state.context} history={this.props.history}/>)}
                             </AreaWrapper>
                         </Grid>
                         <Grid item xs={1} />
@@ -400,4 +357,4 @@ class ResultView extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(ResultView);
+export default withRouter(withStyles(useStyles)(ResultView));

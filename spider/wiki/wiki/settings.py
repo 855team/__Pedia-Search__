@@ -12,7 +12,7 @@ BOT_NAME = 'wiki'
 SPIDER_MODULES = ['wiki.spiders']
 NEWSPIDER_MODULE = 'wiki.spiders'
 
-LOG_LEVEL = 'WARNING'
+LOG_LEVEL = 'DEBUG'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'wiki (+http://www.yourdomain.com)'
@@ -21,21 +21,26 @@ LOG_LEVEL = 'WARNING'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 8
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+# DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 8
-CONCURRENT_REQUESTS_PER_IP = 8
+CONCURRENT_REQUESTS_PER_DOMAIN = 40
+CONCURRENT_REQUESTS_PER_IP = 40
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
-# # Redis
-# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"  #定义一个去重的类，用来将url去重
+# Retry
+RETRY_ENABLED = True
+RETRY_TIMES = 8
+
+# Redis
+# SCHEDULER_IDLE_BEFORE_CLOSE = 0
+# DUPEFILTER_CLASS = "wiki.dupefilter.URLRedisFilter"  #定义一个去重的类，用来将url去重
 # SCHEDULER = "scrapy_redis.scheduler.Scheduler"   #指定队列
 # SCHEDULER_PERSIST = True  #将程序持久化保存
 # REDIS_HOST = "59.110.238.59"
@@ -55,9 +60,9 @@ COOKIES_ENABLED = False
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'wiki.middlewares.WikiSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+   'wiki.middlewares.WikiRetryMiddleware': 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -74,7 +79,7 @@ COOKIES_ENABLED = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'wiki.pipelines.WikiPipeline': 300,
+   'wiki.pipelines.WikiPipeline': 300
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

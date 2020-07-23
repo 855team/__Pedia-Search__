@@ -9,7 +9,6 @@ let postRequest_v2 = (url,data,callback) => {
 
     let opts={
         method: "POST",
-        mode:"no-cors",
         body: formData,
         //credentials: "include"
     }

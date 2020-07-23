@@ -45,8 +45,8 @@ class Gragh2 extends Component {
     draw=()=> {
         try {
             let data = {}
-            data.nodes = this.state.t1_text;
-            data.links = this.state.t2_text;
+            data.nodes = this.state.t1_text.slice(0,15);
+            data.links = this.state.t2_text.slice(0,14);
             let config = {
                 width: document.getElementById("container2").clientWidth,
                 height: document.getElementById("container2").clientHeight
@@ -251,7 +251,7 @@ class Gragh2 extends Component {
                 //再次点击还原
                 edges_line.style("stroke-width", function (line) {
                     //当与连接点连接时变粗
-                    if ((line.source.name == node.name || line.target.name == node.name) ) {
+                    if ((line.source.name === node.name || line.target.name === node.name) ) {
                         if (line.focus && node.focus){
                             line.focus = false;
                             return 1;
@@ -282,6 +282,7 @@ class Gragh2 extends Component {
             })
             .on("dblclick", function (node) {
                 his.push("/search/"+node.name);
+                window.location.reload();
             })
             .on("mouseover", function (d) {
                 //config：替换成需要回显的html
