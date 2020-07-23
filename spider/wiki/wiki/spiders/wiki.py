@@ -26,11 +26,10 @@ def get_url_by_page_id(page_id):
 
 # 输出debug信息
 def print_debug_info(info_type, *args):
-    pass
-    # print(info_type, end=' ')
-    # for i in args:
-    #     print(i, end=' ')
-    # print('\n')
+    print(info_type, end=' ')
+    for i in args:
+        print(i, end=' ')
+    print('\n')
 
 
 # 标记超链接文本
@@ -107,10 +106,6 @@ class wiki(scrapy.Spider):
     # count = 0
 
     def parse(self, response):
-        # if self.count > 10:
-        #     return
-        # else:
-        #     self.count += 1
         json = response.json()
         json_pages = json['query']['pages']
 
