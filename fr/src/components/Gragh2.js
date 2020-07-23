@@ -22,9 +22,9 @@ class Gragh2 extends Component {
     parsenode(){
         let data=this.props.data;
         let tmp=[];
-        tmp.push({ name: data.title, type:"center"})
+        tmp.push({ name: data.title, type:"center",index:0})
         for(let i=0;i<data.linked_words.length;i++){
-            let a={ name: data.linked_words[i].title};
+            let a={ name: data.linked_words[i].title,index:i+1};
             tmp.push(a)
         }
         return tmp;
@@ -45,8 +45,8 @@ class Gragh2 extends Component {
     draw=()=> {
         try {
             let data = {}
-            data.nodes = this.state.t1_text.slice(0,15);
-            data.links = this.state.t2_text.slice(0,14);
+            data.nodes = this.state.t1_text;
+            data.links = this.state.t2_text;
             let config = {
                 width: document.getElementById("container2").clientWidth,
                 height: document.getElementById("container2").clientHeight
@@ -69,9 +69,9 @@ class Gragh2 extends Component {
         links.forEach((link)=> {
             //利用source和target名称进行连线以及节点的确认
             link.source = nodeDict[link.source]
-            nodes[link.source.name] = link.source
+            nodes[link.source.index] = link.source
             link.target = nodeDict[link.target]
-            nodes[link.target.name] = link.target
+            nodes[link.target.index] = link.target
         });
 
         //默认的节点配色方案
