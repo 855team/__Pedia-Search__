@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox } from 'antd';
 import 'antd/dist/antd.css';
 import '../css/login.css'
 import * as userService from '../services/userService'
@@ -27,7 +27,6 @@ class LoginForm extends React.Component {
                         rules: [{ required: true, message: 'Please input your username!' }],
                     })(
                         <Input
-                            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                             placeholder="Username"
                         />,
                     )}
@@ -37,7 +36,6 @@ class LoginForm extends React.Component {
                         rules: [{ required: true, message: 'Please input your Password!' }],
                     })(
                         <Input
-                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                             type="password"
                             placeholder="Password"
                         />,

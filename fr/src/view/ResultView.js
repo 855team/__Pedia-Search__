@@ -15,6 +15,8 @@ import Brightness5SharpIcon from "@material-ui/icons/Brightness5Sharp";
 import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import {withRouter} from "react-router-dom";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import { Menu, Dropdown } from 'antd';
 
 /** 整体容器（背景） **/
 const Container = withStyles((theme) => ({
@@ -286,12 +288,47 @@ class ResultView extends React.Component {
 
     render() {
         let { classes } = this.props;
+        const menu = (
+            <Menu>
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                        我的浏览历史
+                    </a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                        登出
+                    </a>
+                </Menu.Item>
+            </Menu>
+        );
         return (
             <ThemeProvider theme={ Global.get('theme') }>
                 <Container>
+                    {Global.Islogin()?
+                        <ToggleButton
+                            value="right"
+                            style={{ position: 'absolute', left: '2%', top: '3%' }}
+                        >
+                            <Dropdown overlay={menu} >
+                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                    Welcome,{Global.getName()}
+                                </a>
+                            </Dropdown>
+                        </ToggleButton>
+                        :
+                        <ToggleButton
+                            value="right"
+                            style={{ position: 'absolute', left: '3%', top: '3%' }}
+                            onClick={() => {
+                                this.props.history.push("/login");
+                            }}
+                        >
+                            <AddCircleOutlineIcon/>
+                        </ToggleButton>}
                     <SearchBarWrapper>
                         <Grid container>
-                            <Grid item xs={2}>
+                            <Grid item xs={3}>
                                 <Box className={ classes.titleWrapper }>
                                     <Title variant="h5" onClick={() => { this.props.history.push('/index')} }>&nbsp;Pedia</Title>
                                     <Title variant="h5" onClick={() => { this.props.history.push('/index')} }>Search</Title>

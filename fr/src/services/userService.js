@@ -1,37 +1,11 @@
-import config from 'config';
-import {postRequest} from "../utils/ajax";
+import {postRequest} from "../utils/Ajax";
 import {history} from '../utils/history';
 import {message} from 'antd';
 
-export const power = (data) => {
-    const url = `${config.apiUrl}/power`;
-    console.log(data);
-    const callback = (data) => {
-        if(data.status >= 0) {
-            message.success("禁用成功");
-        }
-        else{
-            message.error("禁用失败");
-        }
-    };
-    postRequest(url, data, callback);
-};
 
-export const unpower = (data) => {
-    const url = `${config.apiUrl}/unpower`;
-    const callback = (data) => {
-        if(data.status >= 0) {
-            message.success("解禁成功");
-        }
-        else{
-            message.error("解禁失败");
-        }
-    };
-    postRequest(url, data, callback);
-};
 
 export const login = (data) => {
-    const url = `${config.apiUrl}/login`;
+    const url = `login`;
     console.log("data:",data);
     const callback = (data) => {
         if(data.status >= 0) {
@@ -58,7 +32,7 @@ export const login = (data) => {
 };
 
 export const register = (data) => {
-    const url = `${config.apiUrl}/register`;
+    const url = `register`;
     console.log("data:",data);
     const callback = (data) => {
         if(data.status >= 0) {
@@ -74,7 +48,7 @@ export const register = (data) => {
 
 
 export const logout = () => {
-    const url = `${config.apiUrl}/logout`;
+    const url = `logout`;
 
     const callback = (data) => {
         if(data.status >= 0) {
@@ -90,7 +64,7 @@ export const logout = () => {
 };
 
 export const checkSession = (callback) => {
-    const url = `${config.apiUrl}/checkSession`;
+    const url = `checkSession`;
     postRequest(url, {}, callback);
 };
 

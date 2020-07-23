@@ -7,13 +7,13 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Brightness5SharpIcon from "@material-ui/icons/Brightness5Sharp";
-import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { ThemeProvider } from "@material-ui/core/styles";
 import { fade, Paper } from "@material-ui/core";
 import { darkTheme, lightTheme } from '../utils/theme';
 import { history } from '../utils/history';
 import { Global } from "../utils/Global";
+import { Menu, Dropdown } from 'antd';
 
 /* 样式与theme相关的需要用 withStyles(theme => ({}))(xxx) 定义带样式的组件 */
 /** 搜索框，基于InputBase组件 **/
@@ -124,33 +124,45 @@ class IndexView extends React.Component {
     }
 
     render() {
+        const menu = (
+            <Menu>
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                        我的浏览历史
+                    </a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                        登出
+                    </a>
+                </Menu.Item>
+            </Menu>
+        );
         return (
             <ThemeProvider theme={ this.state.theme }>
                 <Container>
-                    <ToggleButtonGroup style={{ position: 'absolute', right: '0', top: '0' }}>
-                        <ToggleButton
-                            value="left"
-                            onClick={() => {
-                                Global.set('theme', lightTheme);
-                                this.setState({
-                                    theme: lightTheme
-                                })
-                            }}
-                        >
-                            <Brightness5SharpIcon />
-                        </ToggleButton>
+                    {Global.Islogin()?
                         <ToggleButton
                             value="right"
+                            style={{ position: 'absolute', left: '2%', top: '3%' }}
+                        >
+                            <Dropdown overlay={menu} >
+                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                    Welcome,{Global.getName()}
+                                </a>
+                            </Dropdown>
+                        </ToggleButton>
+                        :
+                        <ToggleButton
+                            value="right"
+                            style={{ position: 'absolute', left: '3%', top: '3%' }}
                             onClick={() => {
-                                Global.set('theme', darkTheme)
-                                this.setState({
-                                    theme: darkTheme
-                                })
+                                this.props.history.push("/login");
                             }}
                         >
-                            <NightsStaySharpIcon />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
+                            <AddCircleOutlineIcon/>
+                        </ToggleButton>}
+
                     <CenterWrapper elevation={ 20 }>
                         <Title variant="h1">Pedia Search</Title>
                         <SearchInput

@@ -3,9 +3,9 @@ import "../css/self.css";
 import 'materialize-css';
 import "../css/kg.css";
 import { Toast } from 'react-materialize';
-import {Layout,Card} from 'antd';
+import {Layout,Card,Input} from 'antd';
 import * as d3 from 'd3';
-import NodeContextMenu from "../components/NodeContextMenu";
+const { TextArea } =Input;
 const { Header, Footer, Sider, Content } = Layout;
 
 class Gragh extends Component {
@@ -471,8 +471,8 @@ class Gragh extends Component {
                                 </div>
                             </div>
                         </Content>
-                        <Sider width={300} className="site-layout-background">
-                            <Card title={this.state.title}  style={{ height:550,width: 300 }}>
+                        <Sider width={300} className="site-layout-background" style={{overflowY: 'auto'}}>
+                            <Card title={this.state.title}  style={{ height:5000,width: 300 }}>
                                 <p>{this.state.content}</p>
                             </Card>
                         </Sider>
