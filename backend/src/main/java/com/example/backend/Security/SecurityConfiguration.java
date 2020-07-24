@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -18,11 +17,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.authentication.AuthenticationProvider;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredEvent;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -61,8 +68,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .permitAll()
                 .failureHandler((request,response,ex) -> {
+
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
                     PrintWriter out = response.getWriter();
                     Map<String,Object> map = new HashMap<String,Object>();
                     map.put("code",401);
@@ -79,6 +88,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 })
                 //登录成功，返回json
                 .successHandler((request,response,authentication) -> {
+                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                    System.out.println(ft.format(new Date())+" --- Login: "+authentication.getName());
+
+
                     Map<String,Object> map = new HashMap<String,Object>();
                     map.put("code",200);
                     map.put("message","登录成功");
@@ -89,12 +102,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
+
                 .and()
                 .exceptionHandling()
                 //没有权限，返回json
                 .accessDeniedHandler((request,response,ex) -> {
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
                     PrintWriter out = response.getWriter();
                     Map<String,Object> map = new HashMap<String,Object>();
                     map.put("code",403);
@@ -103,10 +118,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
+
                 .and()
                 .logout()
                 //退出成功，返回json
                 .logoutSuccessHandler((request,response,authentication) -> {
+
+                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                    System.out.println(ft.format(new Date())+" --- Logout");
+
                     Map<String,Object> map = new HashMap<String,Object>();
                     map.put("code",200);
                     map.put("message","退出成功");
@@ -117,25 +137,62 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
+                .deleteCookies()
                 .permitAll();
 
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionStrategy((HttpServletRequest request, HttpServletResponse response) -> {
+
+
+                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                    System.out.println(ft.format(new Date())+" --- Session Timeout");
+
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    PrintWriter out = response.getWriter();
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("code",403);
+                    map.put("message","session无效，请重新登录");
+
+                    out.write(objectMapper.writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                });
+//                .maximumSessions(1)
+//                .expiredSessionStrategy((SessionInformationExpiredEvent event)  -> {
+//                    HttpServletResponse response = event.getResponse();
+//                    response.setContentType("application/json;charset=UTF-8");
+//                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//
+//                    PrintWriter out = response.getWriter();
+//                    Map<String,Object> map = new HashMap<String,Object>();
+//                    map.put("code",403);
+//                    map.put("message","您的账号已在其他地方登陆");
+//
+//                    out.write(objectMapper.writeValueAsString(map));
+//                    out.flush();
+//                    out.close();
+//                    }
+//                );
+
+        http.headers().addHeaderWriter((HttpServletRequest request, HttpServletResponse response) -> {
+            response.setHeader("Access-Control-Allow-Credentials","true");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        });
         //开启跨域访问
-        http.cors().disable();
+        http.cors();
         //开启模拟请求，比如API POST测试工具的测试，不开启时，API POST为报403错误
         http.csrf().disable();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/search/**","/user/register");
+        web.ignoring().antMatchers("/search/**");
+        web.ignoring().antMatchers("/user/register");
     }
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//                .userDetailsService(userDetailsService)
-//                .passwordEncoder(new BCryptPasswordEncoder());
-//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @CrossOrigin()
@@ -21,19 +23,22 @@ public class SearchController {
 
     @PostMapping(value = "/related",produces = "application/json; charset=utf-8")
     public Map<String,Object> findInNeo4j(@RequestParam("keyword") String keyword){
-        System.out.println("Search related: "+keyword);
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        System.out.println(ft.format(new Date())+" --- Search related: "+keyword);
         return entityService.findByKeyword(keyword);
     }
 
     @PostMapping(value = "/wiki",produces = "application/json; charset=utf-8")
     public Map<String,Object> findInMongodb(@RequestParam("keyword") String keyword){
-        System.out.println("Search wiki: "+keyword);
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        System.out.println(ft.format(new Date())+" --- Search wiki: "+keyword);
         return entryService.findByTitle(keyword);
     }
 
     @PostMapping(value = "/page_id",produces = "application/json; charset=utf-8")
     public Map<String,Object> findByPageId(@RequestParam("page_id") int page_id){
-        System.out.println("Search by page_id: "+Integer.toString(page_id));
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        System.out.println(ft.format(new Date())+" --- Search by page_id: "+Integer.toString(page_id));
         return entryService.findByPage_id(page_id);
     }
 }

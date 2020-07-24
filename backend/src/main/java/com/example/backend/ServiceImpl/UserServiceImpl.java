@@ -53,6 +53,8 @@ public class UserServiceImpl implements UserService{
         queryrecordList.add(queryrecord);
 
         user.setQueryrecordList(queryrecordList);
+
+        userDao.saveUser(user);
     }
 
     @Override
