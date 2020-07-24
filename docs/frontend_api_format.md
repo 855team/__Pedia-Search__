@@ -131,6 +131,42 @@ formdata:
 }
 ```
 
+成功登陆返回json：
+
+```json
+{
+    "code": 200,
+    "data": {
+        "authorities": [
+            {
+                "authority": "ROLE_XXX"
+            }
+        ],
+        "details": {
+            "remoteAddress": "0:0:0:0:0:0:0:1",
+            "sessionId": "018C17EEDD08D4A403A3F096C010779B"
+        },
+        "authenticated": true,
+        "principal": {
+            "password": null,
+            "username": "username",
+            "authorities": [
+                {
+                    "authority": "ROLE_XXX"
+                }
+            ],
+            "accountNonExpired": true,
+            "accountNonLocked": true,
+            "credentialsNonExpired": true,
+            "enabled": true
+        },
+        "credentials": null,
+        "name": "855team"
+    },
+    "message": "登录成功"
+}
+```
+
 如果用户名或密码出错会返回json：
 
 ```json
@@ -152,6 +188,42 @@ method:POST
 
 url: /logout
 
+成功登出返回json：
+
+```json
+{
+    "code": 200,
+    "data": {
+        "authorities": [
+            {
+                "authority": "ROLE_XXX"
+            }
+        ],
+        "details": {
+            "remoteAddress": "0:0:0:0:0:0:0:1",
+            "sessionId": "018C17EEDD08D4A403A3F096C010779B"
+        },
+        "authenticated": true,
+        "principal": {
+            "password": null,
+            "username": "855team",
+            "authorities": [
+                {
+                    "authority": "ROLE_XXX"
+                }
+            ],
+            "accountNonExpired": true,
+            "accountNonLocked": true,
+            "credentialsNonExpired": true,
+            "enabled": true
+        },
+        "credentials": null,
+        "name": "855team"
+    },
+    "message": "退出成功"
+}
+```
+
 ### explanation
 
 什么参数都不需要，只要在请求头中带上Cookie即可，退出后session会结束
@@ -171,6 +243,25 @@ url：/user/saverecord或/user/queryrecord（未登录情况下）
     message:"未登录"
 }
 ```
+
+# session超时
+
+method:POST
+
+url：/user/saverecord或/user/queryrecord（session超时）
+
+返回json：
+
+```json
+{
+    code:403
+    message:"session无效，请重新登录"
+}
+```
+
+### explanation
+
+注意在logout后，如果不清除Cookie，也会返回session无效
 
 # 注册
 
