@@ -52,7 +52,7 @@ public class ControllerTest {
 
     @Test
     public void Neo4jTest() throws Exception{
-        RequestBuilder req = MockMvcRequestBuilders.post("/searchrelated")
+        RequestBuilder req = MockMvcRequestBuilders.post("/search/related")
                 .param("keyword","上海")
                 .accept(MediaType.ALL)
                 .contentType(MediaType.ALL);
@@ -79,7 +79,7 @@ public class ControllerTest {
 
     @Test
     public void MongodbTest() throws Exception{
-        RequestBuilder req = MockMvcRequestBuilders.post("/searchwiki")
+        RequestBuilder req = MockMvcRequestBuilders.post("/search/wiki")
                 .param("keyword","上海")
                 .accept(MediaType.ALL)
                 .contentType(MediaType.ALL);

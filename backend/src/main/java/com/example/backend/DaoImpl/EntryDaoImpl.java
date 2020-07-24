@@ -13,7 +13,11 @@ public class EntryDaoImpl implements EntryDao {
 
     @Override
     public Entry findByTitle(String title){
-        Entry entry = entryRepository.findByTitle(title);
-        return entry;
+        return entryRepository.findByTitle(title);
+    }
+
+    @Override
+    public Entry findByPage_id(int page_id){
+        return entryRepository.findByPage_id(page_id);
     }
 }
