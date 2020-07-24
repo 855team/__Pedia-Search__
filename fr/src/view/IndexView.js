@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 
 import InputBase from '@material-ui/core/InputBase';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -7,13 +7,15 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Brightness5SharpIcon from "@material-ui/icons/Brightness5Sharp";
-import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { ThemeProvider } from "@material-ui/core/styles";
 import { fade, Paper } from "@material-ui/core";
 import { darkTheme, lightTheme } from '../utils/theme';
 import { history } from '../utils/history';
 import { Global } from "../utils/Global";
+import { Menu, Dropdown } from 'antd';
+import {logout} from "../services/userService";
+import { Drawer, Button } from 'antd';
 
 /* 样式与theme相关的需要用 withStyles(theme => ({}))(xxx) 定义带样式的组件 */
 /** 搜索框，基于InputBase组件 **/
@@ -114,43 +116,87 @@ class IndexView extends React.Component {
 
         this.state = {
             theme: Global.get('theme'),
-            searchText: ''
+            searchText: '',
+            login: Global.get('login'),
+            visible:false
         };
     }
     componentDidMount() {
         this.setState({
-            theme: Global.get('theme')
+            theme: Global.get('theme'),
+            login: Global.get('login')
         });
+        alert(Global.get('login'))
     }
 
     render() {
+        const showDrawer = () => {
+            this.setState({
+                visible:true
+            })
+        };
+        const onClose = () => {
+            this.setState({
+                visible:false
+            })
+        };
+        const menu = (
+            <Menu>
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer}>
+                        我的浏览历史
+                    </a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" onClick={logout}>
+                        登出
+                    </a>
+                </Menu.Item>
+            </Menu>
+        );
+        const showhistory=()=>{
+            return(
+
+                <Menu>
+                    <Menu.Item key="1">Option 1</Menu.Item>
+                    <Menu.Item key="2">Option 2</Menu.Item>
+                </Menu>
+            )
+        }
         return (
             <ThemeProvider theme={ this.state.theme }>
                 <Container>
-                    <ToggleButtonGroup style={{ position: 'absolute', right: '0', top: '0' }}>
-                        <ToggleButton
-                            value="left"
-                            onClick={() => {
-                                Global.set('theme', lightTheme);
-                                this.setState({
-                                    theme: lightTheme
-                                })
-                            }}
-                        >
-                            <Brightness5SharpIcon />
-                        </ToggleButton>
+                    <Drawer
+                        title="浏览历史"
+                        placement="right"
+                        closable={true}
+                        onClose={onClose}
+                        visible={this.state.visible}
+                    >
+                        {showhistory()}
+                    </Drawer>
+                    {this.state.login?
                         <ToggleButton
                             value="right"
+                            style={{ position: 'absolute', left: '2%', top: '3%' }}
+                        >
+                            <Dropdown overlay={menu} >
+                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                    Welcome,{Global.getName()}
+                                </a>
+                            </Dropdown>
+                        </ToggleButton>
+                        :
+                        <ToggleButton
+                            value="right"
+                            style={{ position: 'absolute', left: '3%', top: '3%' }}
                             onClick={() => {
-                                Global.set('theme', darkTheme)
-                                this.setState({
-                                    theme: darkTheme
-                                })
+                                this.props.history.push("/login");
                             }}
                         >
-                            <NightsStaySharpIcon />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
+                            <AddCircleOutlineIcon/>
+                        </ToggleButton>}
+
                     <CenterWrapper elevation={ 20 }>
                         <Title variant="h1">Pedia Search</Title>
                         <SearchInput
@@ -173,4 +219,4 @@ class IndexView extends React.Component {
     }
 }
 
-export default withRouter(withStyles(useStyles)(IndexView));
+export default withStyles(useStyles)(IndexView);

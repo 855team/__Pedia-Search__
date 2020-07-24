@@ -3,9 +3,9 @@ import "../css/self.css";
 import 'materialize-css';
 import "../css/kg.css";
 import { Toast } from 'react-materialize';
-import {Layout,Card} from 'antd';
+import {Layout,Card,Input} from 'antd';
 import * as d3 from 'd3';
-import NodeContextMenu from "../components/NodeContextMenu";
+const { TextArea } =Input;
 const { Header, Footer, Sider, Content } = Layout;
 
 class Gragh extends Component {
@@ -29,7 +29,6 @@ class Gragh extends Component {
     }
     componentDidMount() {
         if(this.props.data){
-            console.log("mount",this.props.data)
             this.draw();
         }
 
@@ -123,8 +122,8 @@ class Gragh extends Component {
         //data:nodes 至少需要一个name
         let nodeDict = data.nodes;
         let links = data.links;
-        let nodes = {};
-        console.log("h",data)
+        /*let nodes = {};           这部分代码有问题，但是画的效果更好
+        console.log("before",nodeDict);
         links.forEach((link)=> {
             //利用source和target名称进行连线以及节点的确认
             link.source = nodeDict[link.source]
@@ -132,7 +131,7 @@ class Gragh extends Component {
             link.target = nodeDict[link.target]
             nodes[link.target.index] = link.target
         });
-
+        console.log("after",nodes)*/
         //默认的节点配色方案
 
         let defaultNodeColor = [
@@ -186,13 +185,13 @@ class Gragh extends Component {
 
         let force = d3.layout.force()
             //设定节点数组
-            .nodes(d3.values(nodes))
+            .nodes(nodeDict)
             //设定关系数组
             .links(links)
             //canvas大小
             .size([width, height])
             //连接线长度
-            .linkDistance(120)
+            .linkDistance(80)
             //作用力，大于0吸引小于0排斥
             .charge(-1200)
             //指时间间隔，隔一段时间刷新一次画面
@@ -243,7 +242,9 @@ class Gragh extends Component {
             //可以参考http://www.ourd3js.com/wordpress/797/ enter、exit、update的区别
             .append("path")//添加path标签
             .attr({
-                'd': function (d) { return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y },//变量 d 是由D3.js提供的一个在匿名函数中的可用变量。这个变量是对当前要处理的元素的_data_属性的引用。
+                'd': function (d) {
+                    return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y
+                },//变量 d 是由D3.js提供的一个在匿名函数中的可用变量。这个变量是对当前要处理的元素的_data_属性的引用。
                 'class': 'edgepath',//定义该path标签class为edgepath
                 'id': function (d, i) { return 'edgepath' + i; }
             })// i也是d3.js提供的变量，表示当前处理的HTML元素在已选元素选集中的索引值
@@ -297,7 +298,6 @@ class Gragh extends Component {
             .enter().append("circle")
             //config:背景色
             .style("fill", function (node) {
-
                 return colorDict[node.type].fill;
             })
             .style('stroke', function (node) {
@@ -471,8 +471,8 @@ class Gragh extends Component {
                                 </div>
                             </div>
                         </Content>
-                        <Sider width={300} className="site-layout-background">
-                            <Card title={this.state.title}  style={{ height:550,width: 300 }}>
+                        <Sider width={300} className="site-layout-background" style={{overflowY: 'auto'}}>
+                            <Card title={this.state.title}  style={{ height:5000,width: 300 }}>
                                 <p>{this.state.content}</p>
                             </Card>
                         </Sider>
