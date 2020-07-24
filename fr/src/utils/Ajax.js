@@ -29,7 +29,6 @@ let postRequest = (url,json,callback) => {
 
     let opts={
         method: "POST",
-        mode:"no-cors",
         body: JSON.stringify(json),
         headers:{
             'Content-Type':'application/json'
@@ -49,4 +48,33 @@ let postRequest = (url,json,callback) => {
         })
 }
 
-export{postRequest_v2,postRequest};
+let postRequest_v3 = (url,data,callback) => {
+    let formData=new FormData();
+
+    for(let p in data){
+        if(data.hasOwnProperty(p)){
+            formData.append(p,data[p])
+        }
+    }
+
+    let opts={
+        method: "POST",
+        body: formData,
+        mode:"no-cors"
+        //credentials: "include"
+    }
+
+    fetch(url,opts)
+        .then((response)=>{
+            return response.json()
+        })
+        .then((data)=>{
+            callback(data);
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+}
+
+
+export{postRequest_v2,postRequest,postRequest_v3};

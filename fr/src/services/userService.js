@@ -1,70 +1,80 @@
-import {postRequest} from "../utils/Ajax";
+import {postRequest_v3,postRequest_v2} from "../utils/Ajax";
 import {history} from '../utils/history';
 import {message} from 'antd';
+import {Global} from "../utils/Global";
 
 
 
 export const login = (data) => {
-    const url = `login`;
+    const url = `http://49.235.245.206:8080/login`;
     console.log("data:",data);
     const callback = (data) => {
-        if(data.status >= 0) {
-            localStorage.setItem('user', JSON.stringify(data.data.userId));
-            console.log("login",data);
-            if(data.data.privilege==1){
-                message.error("该账户已被禁用");
-            }
-            if(data.data.userType==1){
-                history.push("/manageView");
-                message.success(data.msg);
-            }
-            if(data.data.userType==0&&data.data.privilege==0){
-                history.push("/");
-                message.success(data.msg);
-            }
-            
+        console.log("login",data)
+        if(data.code == 401) {
+            message.error(data.message);
         }
-        else{
-            message.error(data.msg);
+        if(data.code == 200){
+            Global.set('login',1);
+            Global.setName(data.data.name);
+            message.success(data.message);
+            history.push("/index");
+            window.location.reload();
         }
     };
-    postRequest(url, data, callback);
+    postRequest_v2(url, data, callback);
 };
 
 export const register = (data) => {
-    const url = `register`;
+    const url = `http://49.235.245.206:8080/user/register`;
     console.log("data:",data);
     const callback = (data) => {
-        if(data.status >= 0) {
-            history.push("/login");
-            message.success("注册成功");
-        }
-        else{
+        console.log("register",data)
+        if(data== 0) {
             message.error("注册失败");
         }
+        if(data!=0) {
+            history.push("/index");
+            alert("注册成功");
+            window.location.reload();
+        }
     };
-    postRequest(url, data, callback);
+    postRequest_v2(url, data, callback);
 };
 
 
 export const logout = () => {
-    const url = `logout`;
-
+    const url = `http://49.235.245.206:8080/logout`;
     const callback = (data) => {
-        if(data.status >= 0) {
-            localStorage.removeItem("user");
-            history.push("/login");
+        if(data.status == 200) {
+            Global.logout();
+            Global.setName("");
             message.success(data.msg);
         }
         else{
             message.error(data.msg);
         }
     };
-    postRequest(url, {}, callback);
+    postRequest_v2(url, {}, callback);
 };
 
-export const checkSession = (callback) => {
-    const url = `checkSession`;
-    postRequest(url, {}, callback);
+export const saverecord = (data) => {
+    const url = `http://49.235.245.206:8080/user/saverecord`;
+    const callback = (data) => {
+        if(data==null) {
+            ;
+        }
+        else{
+            if(data.code==403){
+                message.error(data.message);
+            }
+        }
+    };
+    postRequest_v2(url, {}, callback);
 };
+
+export const queryrecord = (data,callback) => {
+    const url = `http://49.235.245.206:8080/user/queryrecord`;
+    postRequest_v2(url, {}, callback);
+};
+
 

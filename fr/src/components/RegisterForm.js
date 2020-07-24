@@ -41,16 +41,6 @@ class RegisterForm extends React.Component {
                     )}
                 </Form.Item>
                 <Form.Item>
-                    {getFieldDecorator('repassword', {
-                        rules: [{ required: true, message: 'Please input your Password!' }],
-                    })(
-                        <Input
-                            type="password"
-                            placeholder="重复密码"
-                        />,
-                    )}
-                </Form.Item>
-                <Form.Item>
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         立即注册
                     </Button>

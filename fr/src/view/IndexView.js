@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 
 import InputBase from '@material-ui/core/InputBase';
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -14,6 +14,8 @@ import { darkTheme, lightTheme } from '../utils/theme';
 import { history } from '../utils/history';
 import { Global } from "../utils/Global";
 import { Menu, Dropdown } from 'antd';
+import {logout} from "../services/userService";
+import { Drawer, Button } from 'antd';
 
 /* 样式与theme相关的需要用 withStyles(theme => ({}))(xxx) 定义带样式的组件 */
 /** 搜索框，基于InputBase组件 **/
@@ -114,34 +116,66 @@ class IndexView extends React.Component {
 
         this.state = {
             theme: Global.get('theme'),
-            searchText: ''
+            searchText: '',
+            login: Global.get('login'),
+            visible:false
         };
     }
     componentDidMount() {
         this.setState({
-            theme: Global.get('theme')
+            theme: Global.get('theme'),
+            login: Global.get('login')
         });
+        alert(Global.get('login'))
     }
 
     render() {
+        const showDrawer = () => {
+            this.setState({
+                visible:true
+            })
+        };
+        const onClose = () => {
+            this.setState({
+                visible:false
+            })
+        };
         const menu = (
             <Menu>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer}>
                         我的浏览历史
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                    <a target="_blank" rel="noopener noreferrer" onClick={logout}>
                         登出
                     </a>
                 </Menu.Item>
             </Menu>
         );
+        const showhistory=()=>{
+            return(
+
+                <Menu>
+                    <Menu.Item key="1">Option 1</Menu.Item>
+                    <Menu.Item key="2">Option 2</Menu.Item>
+                </Menu>
+            )
+        }
         return (
             <ThemeProvider theme={ this.state.theme }>
                 <Container>
-                    {Global.Islogin()?
+                    <Drawer
+                        title="浏览历史"
+                        placement="right"
+                        closable={true}
+                        onClose={onClose}
+                        visible={this.state.visible}
+                    >
+                        {showhistory()}
+                    </Drawer>
+                    {this.state.login?
                         <ToggleButton
                             value="right"
                             style={{ position: 'absolute', left: '2%', top: '3%' }}
@@ -185,4 +219,4 @@ class IndexView extends React.Component {
     }
 }
 
-export default withRouter(withStyles(useStyles)(IndexView));
+export default withStyles(useStyles)(IndexView);

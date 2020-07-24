@@ -17,6 +17,8 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import {withRouter} from "react-router-dom";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { Menu, Dropdown } from 'antd';
+import {logout} from "../services/userService";
+import {saverecord,queryrecord} from '../services/userService'
 
 /** 整体容器（背景） **/
 const Container = withStyles((theme) => ({
@@ -280,10 +282,10 @@ class ResultView extends React.Component {
             })
         };
         let data = {"keyword": keyword};
-        postRequest_v2('http://49.235.245.206:8080/searchwiki', data, callback1);
-        postRequest_v2('http://49.235.245.206:8080/searchrelated', data, callback2);
-
-
+        postRequest_v2('http://49.235.245.206:8080/search/wiki', data, callback1);
+        postRequest_v2('http://49.235.245.206:8080/search/related', data, callback2);
+        let tosave = {"keyword": keyword,last_keyword:""};
+        saverecord(tosave);
     }
 
     render() {
@@ -296,7 +298,7 @@ class ResultView extends React.Component {
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                    <a target="_blank" rel="noopener noreferrer" onClick={logout}>
                         登出
                     </a>
                 </Menu.Item>
