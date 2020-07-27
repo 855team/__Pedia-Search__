@@ -1,19 +1,13 @@
 package com.example.backend.Controller;
 
-import com.example.backend.Entity.Queryrecord;
-import com.example.backend.Entity.User;
-import com.example.backend.Service.EntityService;
-import com.example.backend.Service.EntryService;
-import com.example.backend.Service.QueryrecordService;
 import com.example.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,20 +19,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private QueryrecordService queryrecordService;
-
     @PostMapping(value = "/register")
     public int Register(
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ){
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        System.out.println(ft.format(new Date())+" --- Register: "+username);
         return userService.Register(username,password);
     }
 
     @PostMapping(value = "/queryrecord")
     public List<Map<String,Object>> findRecord(Principal principal){
-        System.out.println("Query record: "+principal.getName());
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        System.out.println(ft.format(new Date())+" --- Query record: "+principal.getName());
 
         return userService.QueryRecord(principal.getName());
     }
@@ -49,7 +43,8 @@ public class UserController {
             @RequestParam("last_keyword") String last_keyword,
             Principal principal
     ){
-        System.out.println("Save record: "+principal.getName());
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        System.out.println(ft.format(new Date())+" --- Save record: "+principal.getName());
 
         userService.SaveRecord(principal.getName(),keyword,last_keyword);
     }

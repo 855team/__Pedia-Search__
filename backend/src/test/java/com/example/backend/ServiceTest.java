@@ -2,11 +2,13 @@ package com.example.backend;
 
 import com.example.backend.Dao.EntityDao;
 import com.example.backend.Dao.EntryDao;
+import com.example.backend.Dao.UserDao;
 import com.example.backend.Entity.Entity;
 import com.example.backend.Entity.Entry;
 import com.example.backend.Service.EntityService;
 import com.example.backend.Service.EntryService;
 
+import com.example.backend.Service.UserService;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 import org.junit.jupiter.api.Assertions;
@@ -31,11 +33,17 @@ class ServiceTest {
     @Autowired
     private EntryService entryService;
 
+    @Autowired
+    private UserService userService;
+
     @MockBean
     private EntityDao entityDao;
 
     @MockBean
     private EntryDao entryDao;
+
+    @MockBean
+    private UserDao userDao;
 
     @Test
     public void entityServiceTest(){
