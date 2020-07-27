@@ -16,8 +16,8 @@ import NightsStaySharpIcon from "@material-ui/icons/NightsStaySharp";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import {withRouter} from "react-router-dom";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { Menu, Dropdown } from 'antd';
-import {logout} from "../services/userService";
+import {Menu, Dropdown, Drawer} from 'antd';
+import {checklogin, logout} from "../services/userService";
 import {saverecord,queryrecord} from '../services/userService'
 
 /** 整体容器（背景） **/
@@ -255,12 +255,45 @@ class ResultView extends React.Component {
             context: null,
             relatedtags: null,
             gragh:-1, //Gragh
-            searchText: this.props.match.params.keyword
+            searchText: this.props.match.params.keyword,
+            historyquery:[]
         };
     }
 
-    componentDidMount() {
-        this.postRequest(this.props.match.params.keyword);
+    async componentDidMount() {
+        let callback= (data)=>{
+            if(data.code==403){
+                Global.set('login',0);
+                Global.set('username',"")
+            }
+            if(data.code==200){
+                Global.set('login',1);
+                Global.set('username',data.username)
+            }
+        }
+        await checklogin(callback);
+
+
+        let callback2=(data)=>{
+            this.setState({
+                historyquery:data
+            })
+        }
+        if(Global.Islogin()){
+            queryrecord(callback2);
+        }
+        await this.postRequest(this.props.match.params.keyword);
+    }
+    showhistory(){
+        let box=[];
+        for(let i=0;i<this.state.historyquery.length;i++){
+            box.push(<Menu.Item key={i}>{this.state.historyquery[i].keyword}</Menu.Item>)
+        }
+        return(
+            <Menu>
+                {box}
+            </Menu>
+        )
     }
 
     /** 向后端口请求搜索结果数据 **/
@@ -285,20 +318,36 @@ class ResultView extends React.Component {
         postRequest_v2('http://49.235.245.206:8080/search/wiki', data, callback1);
         postRequest_v2('http://49.235.245.206:8080/search/related', data, callback2);
         let tosave = {"keyword": keyword,last_keyword:""};
-        saverecord(tosave);
+        if(Global.Islogin()){
+            saverecord(tosave);
+        }
+
+    }
+    loggout=()=>{
+        logout(this.props.history)
     }
 
     render() {
         let { classes } = this.props;
+        const showDrawer = () => {
+            this.setState({
+                visible:true
+            })
+        };
+        const onClose = () => {
+            this.setState({
+                visible:false
+            })
+        };
         const menu = (
             <Menu>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer}>
                         我的浏览历史
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={logout}>
+                    <a target="_blank" rel="noopener noreferrer" onClick={this.loggout.bind(this)}>
                         登出
                     </a>
                 </Menu.Item>
@@ -307,6 +356,16 @@ class ResultView extends React.Component {
         return (
             <ThemeProvider theme={ Global.get('theme') }>
                 <Container>
+                    {Global.Islogin()?
+                        <Drawer
+                            title="浏览历史"
+                            placement="right"
+                            closable={true}
+                            onClose={onClose}
+                            visible={this.state.visible}
+                        >
+                            {this.showhistory()}
+                        </Drawer>:null}
                     {Global.Islogin()?
                         <ToggleButton
                             value="right"
@@ -350,7 +409,6 @@ class ResultView extends React.Component {
                                                 dataReady: false
                                             });
                                             this.props.history.push('/search/' + this.state.searchText);
-                                            window.location.reload();
                                         }
                                     }}
                                 />
