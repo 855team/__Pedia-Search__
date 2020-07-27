@@ -13,7 +13,7 @@ class LoginView extends React.Component{
                     <div className="login-box">
                         <h1 className="page-title">Welcome to PediaSearch</h1>
                         <div className="login-content">
-                            <WrappedLoginForm />
+                            <WrappedLoginForm history={this.props.history}/>
                         </div>
                     </div>
                 </div>

@@ -11,6 +11,10 @@
       <sshConfig host="47.113.103.137" id="654153de-8180-496c-ada0-45aa56f6658e" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
       <sshConfig host="47.113.103.137" id="1fd011fa-a49e-4904-99c3-6c2686c29bf2" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
       <sshConfig host="47.113.103.137" id="009312cc-5d85-48c1-bd04-97a34a8b5a70" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="df76be6c-5460-4b43-b35a-6e0175c2ad86" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="925f3783-d801-4adc-8a26-8c7e61dc2977" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="0e0ab68c-4349-4f1e-99ca-6f973df1ba93" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="afceb48b-27eb-4f93-b69c-65f82df8b887" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
     </configs>
   </component>
 </project>

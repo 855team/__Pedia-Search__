@@ -25,29 +25,6 @@ let postRequest_v2 = (url,data,callback) => {
         })
 }
 
-let postRequest = (url,json,callback) => {
-
-    let opts={
-        method: "POST",
-        body: JSON.stringify(json),
-        headers:{
-            'Content-Type':'application/json'
-        },
-        //credentials: "include"
-    }
-
-    fetch(url,opts)
-        .then((response)=>{
-            return response.json()
-        })
-        .then((data)=>{
-            callback(data);
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
-}
-
 let postRequest_v3 = (url,data,callback) => {
     let formData=new FormData();
 
@@ -60,8 +37,7 @@ let postRequest_v3 = (url,data,callback) => {
     let opts={
         method: "POST",
         body: formData,
-        mode:"no-cors"
-        //credentials: "include"
+        credentials: "include"
     }
 
     fetch(url,opts)
@@ -77,4 +53,4 @@ let postRequest_v3 = (url,data,callback) => {
 }
 
 
-export{postRequest_v2,postRequest,postRequest_v3};
+export{postRequest_v2,postRequest_v3};
