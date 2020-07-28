@@ -5,13 +5,7 @@ import com.example.backend.Entity.Queryrecord;
 import com.example.backend.Entity.User;
 import com.example.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -40,7 +34,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void SaveRecord(String username,String keyword,String last_keyword){
+    public User SaveRecord(String username,String keyword,String last_keyword){
         User user = userDao.findByUsername(username);
 
         Queryrecord queryrecord = new Queryrecord();
@@ -54,7 +48,7 @@ public class UserServiceImpl implements UserService{
 
         user.setQueryrecordList(queryrecordList);
 
-        userDao.saveUser(user);
+        return userDao.saveUser(user);
     }
 
     @Override

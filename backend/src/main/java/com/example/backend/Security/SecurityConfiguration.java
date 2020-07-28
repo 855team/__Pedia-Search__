@@ -17,19 +17,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.authentication.AuthenticationProvider;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.security.web.session.SessionInformationExpiredEvent;
-import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -62,13 +57,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/user/**").permitAll()
-                .anyRequest().authenticated() //必须授权才能访问
+                .anyRequest().authenticated()//必须授权才能访问
 
                 .and()
                 .formLogin()
                 .permitAll()
                 .failureHandler((request,response,ex) -> {
-
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
@@ -77,11 +71,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     map.put("code",401);
                     if (ex instanceof UsernameNotFoundException || ex instanceof BadCredentialsException) {
                         map.put("message","用户名或密码错误");
-                    } else if (ex instanceof DisabledException) {
-                        map.put("message","账户被禁用");
-                    } else {
-                        map.put("message","登录失败!");
                     }
+//                    else if (ex instanceof DisabledException) {
+//                        map.put("message","账户被禁用");
+//                    } else {
+//                        map.put("message","登录失败!");
+//                    }
                     out.write(objectMapper.writeValueAsString(map));
                     out.flush();
                     out.close();
@@ -103,21 +98,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.close();
                 })
 
-                .and()
-                .exceptionHandling()
-                //没有权限，返回json
-                .accessDeniedHandler((request,response,ex) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
-                    PrintWriter out = response.getWriter();
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put("code",403);
-                    map.put("message", "权限不足");
-                    out.write(objectMapper.writeValueAsString(map));
-                    out.flush();
-                    out.close();
-                })
+//                .and()
+//                .exceptionHandling()
+//                //没有权限，返回json
+//                .accessDeniedHandler((request,response,ex) -> {
+//                    response.setContentType("application/json;charset=utf-8");
+//                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//
+//                    PrintWriter out = response.getWriter();
+//                    Map<String,Object> map = new HashMap<String,Object>();
+//                    map.put("code",403);
+//                    map.put("message", "权限不足");
+//                    out.write(objectMapper.writeValueAsString(map));
+//                    out.flush();
+//                    out.close();
+//                })
 
                 .and()
                 .logout()
@@ -143,8 +138,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .invalidSessionStrategy((HttpServletRequest request, HttpServletResponse response) -> {
-
-
                     SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
                     System.out.println(ft.format(new Date())+" --- Session Timeout");
 
@@ -192,6 +185,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/search/**");
         web.ignoring().antMatchers("/user/register");
+        web.ignoring().antMatchers("/actuator/**");
     }
 
     @Bean
