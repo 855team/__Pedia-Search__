@@ -22,9 +22,6 @@ function State() {
     this.setName=(name)=>{
         this.state['username'] = name;
     }
-    this.setId=(id)=>{
-        this.state['userid'] = id;
-    }
     this.set = (key, value) => {
         this.state[key] = value;
         console.log(key,this.state[key])

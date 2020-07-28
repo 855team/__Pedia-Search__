@@ -12,7 +12,7 @@ class RegisterForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                userService.register(values);
+                userService.register(values,this.props.history);
             }
         });
     };

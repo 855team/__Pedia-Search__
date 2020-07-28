@@ -13,7 +13,7 @@ class RegisterView extends React.Component{
                     <div className="login-box">
                         <h1 className="page-title">欢迎你的加入</h1>
                         <div className="login-content">
-                            <WrappedRegisterForm />
+                            <WrappedRegisterForm history={this.props.history}/>
                         </div>
                     </div>
                 </div>

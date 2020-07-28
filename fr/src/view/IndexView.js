@@ -14,7 +14,7 @@ import { darkTheme, lightTheme } from '../utils/theme';
 import { history } from '../utils/history';
 import { Global } from "../utils/Global";
 import { Menu, Dropdown } from 'antd';
-import {logout} from "../services/userService";
+import {logout,checklogin,queryrecord} from "../services/userService";
 import { Drawer, Button } from 'antd';
 
 /* 样式与theme相关的需要用 withStyles(theme => ({}))(xxx) 定义带样式的组件 */
@@ -117,19 +117,51 @@ class IndexView extends React.Component {
         this.state = {
             theme: Global.get('theme'),
             searchText: '',
-            login: Global.get('login'),
-            visible:false
+            visible:false,
+            historyquery:[]
         };
     }
     componentDidMount() {
         this.setState({
             theme: Global.get('theme'),
-            login: Global.get('login')
         });
-        alert(Global.get('login'))
+        let callback=(data)=>{
+            if(data.code==403){
+                Global.set('login',0);
+                Global.set('username',"")
+            }
+            if(data.code==200){
+                Global.set('login',1);
+                Global.set('username',data.username)
+            }
+        }
+        checklogin(callback);
+        let callback2=(data)=>{
+            this.setState({
+                historyquery:data
+            })
+        }
+        if(Global.Islogin()){
+            queryrecord(callback2);
+        }
+    }
+    loggout(){
+        logout(this.props.history)
+    }
+    showhistory(){
+        let box=[];
+        for(let i=0;i<this.state.historyquery.length;i++){
+            box.push(<Menu.Item key={i}>{this.state.historyquery[i].keyword}</Menu.Item>)
+        }
+        return(
+            <Menu>
+                {box}
+            </Menu>
+        )
     }
 
     render() {
+
         const showDrawer = () => {
             this.setState({
                 visible:true
@@ -148,24 +180,16 @@ class IndexView extends React.Component {
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={logout}>
+                    <a target="_blank" rel="noopener noreferrer" onClick={this.loggout.bind(this)}>
                         登出
                     </a>
                 </Menu.Item>
             </Menu>
         );
-        const showhistory=()=>{
-            return(
-
-                <Menu>
-                    <Menu.Item key="1">Option 1</Menu.Item>
-                    <Menu.Item key="2">Option 2</Menu.Item>
-                </Menu>
-            )
-        }
         return (
             <ThemeProvider theme={ this.state.theme }>
                 <Container>
+                    {Global.Islogin()?
                     <Drawer
                         title="浏览历史"
                         placement="right"
@@ -173,9 +197,9 @@ class IndexView extends React.Component {
                         onClose={onClose}
                         visible={this.state.visible}
                     >
-                        {showhistory()}
-                    </Drawer>
-                    {this.state.login?
+                        {this.showhistory()}
+                    </Drawer>:null}
+                    {Global.Islogin()?
                         <ToggleButton
                             value="right"
                             style={{ position: 'absolute', left: '2%', top: '3%' }}

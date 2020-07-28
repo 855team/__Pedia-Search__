@@ -13,7 +13,7 @@ class LoginForm extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                userService.login(values);
+                userService.login(values,this.props.history);
             }
         });
     };
