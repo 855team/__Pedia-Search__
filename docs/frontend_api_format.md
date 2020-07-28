@@ -1,11 +1,15 @@
 # frontend-api-format
-## mindmap(from mongodb)
+## 根据keyword在mongodb中查找wiki词条
 
-method:POST
+**method：**POST
 
-url: /search/wiki
+**url：**/search/wiki
 
-formdata：
+**cookie：**不需要
+
+**参数：**
+
+​	**formdata：**
 
 ```
 {
@@ -13,19 +17,19 @@ formdata：
 }
 ```
 
-返回的json：
+**返回json：**
 
 ```json
 {
     "title":"上海",
-    "page_id": "54321"
+    "page_id": 54321
     "sections":{
         "title":"历史",
         "text":"参见balabala",
         "linked_words":[
             {
                 text: "文本",
-                page_id: "123456"
+                page_id: 123456
             }
         ],
         "sections":[
@@ -35,7 +39,7 @@ formdata：
                 "linked_words":[
                     {
                         text: "文本",
-                        page_id: "123456"
+                        page_id: 123456
                     }
                 ],
                 sections: []
@@ -46,7 +50,7 @@ formdata：
                 "linked_words":[
                     {
                         text: "文本",
-                        page_id: "123456"
+                        page_id: 123456
                     }
                 ]
                 "sections" :[
@@ -56,7 +60,7 @@ formdata：
                         "linked_words":[
                             {
                                 text: "文本",
-                                page_id: "123456"
+                                page_id: 123456
                             }
                         ]
                     }
@@ -68,23 +72,96 @@ formdata：
 ```
 ### explanation
 - title表示中心词汇
-
 - sections是目录结构
-
 - 如果不是最后一级目录，title是百科里的名称，text表示正文内容，sections不为空且是更深目录的数组，linkedwords是带有超链接词的数组
-
 - 如果是最后一级目录，title是百科里的名称，text表示正文内容，sections是空数组，linkedwords是带有超链接词的数组
-
 - 中文编码请统一为utf-8
 
-  
-## releatedtags(from neo4j)
+## 根据page_id在mongodb中查找wiki词条
 
-method:POST
+**method：**POST
 
-url: /search/related
+**url：**/search/page_id
 
-formdata:
+**cookie：**不需要
+
+**参数：**
+
+​	**formdata：**
+
+```json
+{
+	page_id:54321
+}
+```
+
+**返回json：**
+
+```json
+{
+    "title":"上海",
+    "page_id": 54321
+    "sections":{
+        "title":"历史",
+        "text":"参见balabala",
+        "linked_words":[
+            {
+                text: "文本",
+                page_id: 123456
+            }
+        ],
+        "sections":[
+            {
+                "title":"早期历史",
+                "text":"正文",
+                "linked_words":[
+                    {
+                        text: "文本",
+                        page_id: 123456
+                    }
+                ],
+                sections: []
+            },
+            {
+                "title":"开埠初期",
+                "text":"正文",
+                "linked_words":[
+                    {
+                        text: "文本",
+                        page_id: 123456
+                    }
+                ]
+                "sections" :[
+                    {
+                        "title":"早期历史",
+                        "text":"正文",
+                        "linked_words":[
+                            {
+                                text: "文本",
+                                page_id: 123456
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+
+
+## 根据keyword在neo4j中查找relatedtags
+
+**method：**POST
+
+**url：**/search/related
+
+**cookie：**不需要
+
+**参数：**
+
+​	**formdata:**
 
 ```
 {
@@ -92,7 +169,7 @@ formdata:
 }
 ```
 
-返回的json：
+**返回json：**
 
 ```json
 {
@@ -114,15 +191,17 @@ formdata:
 - weight是节点的权重
 - 全部的关联词汇
 
+## 登录
 
+**method：**POST
 
-# 登录
+**url：**/login
 
-method:POST
+**cookie：**不需要
 
-url: /login
+**参数：**
 
-formdata:
+​	**formdata:**
 
 ```json
 {
@@ -131,7 +210,9 @@ formdata:
 }
 ```
 
-成功登陆返回json：
+**返回json：**
+
+​	**成功登陆：**
 
 ```json
 {
@@ -167,7 +248,7 @@ formdata:
 }
 ```
 
-如果用户名或密码出错会返回json：
+​	**用户名或密码出错：**
 
 ```json
 {
@@ -176,19 +257,23 @@ formdata:
 }
 ```
 
-
-
 ### explanation
 
 登录后，后端返回的请求头中会包括一段Cookie，将这段Cookie的JSESSIONID加入接下来的请求中即可验证身份
 
-# 登出
+## 登出
 
-method:POST
+**method：**POST
 
-url: /logout
+**url：**/logout
 
-成功登出返回json：
+**cookie：**需要
+
+**参数：**无
+
+**返回json：**
+
+​	**成功登出：**
 
 ```json
 {
@@ -229,13 +314,15 @@ url: /logout
 什么参数都不需要，只要在请求头中带上Cookie即可，退出后session会结束
 
 
-# 未登录情况
+## 未登录情况
 
-method:POST
+**method：**POST
 
-url：/user/saverecord或/user/queryrecord（未登录情况下）
+**url：**/user/saverecord或/user/queryrecord（未登录情况下）
 
-返回json：
+**cookie：**不需要
+
+**返回json：**
 
 ```json
 {
@@ -244,13 +331,15 @@ url：/user/saverecord或/user/queryrecord（未登录情况下）
 }
 ```
 
-# session超时
+## session超时
 
-method:POST
+**method：**POST
 
-url：/user/saverecord或/user/queryrecord（session超时）
+**url：**/user/saverecord或/user/queryrecord（session超时）
 
-返回json：
+**cookie：**需要
+
+**返回json：**
 
 ```json
 {
@@ -263,13 +352,17 @@ url：/user/saverecord或/user/queryrecord（session超时）
 
 注意在logout后，如果不清除Cookie，也会返回session无效
 
-# 注册
+## 注册
 
-method:POST
+**method：**POST
 
-url: /user/register
+**url：**/user/register
 
-formdata:
+**cookie：**不需要
+
+**参数：**
+
+​	**formdata：**
 
 ```json
 {
@@ -278,17 +371,23 @@ formdata:
 }
 ```
 
-### explanation
+**返回json：**
 
-注册后会返回userID，如果username重复，则注册失败，返回0
+​	**注册成功：**userID
 
-# 获取用户搜索记录
+​	**注册失败（username重复）：**0
 
-url：/user/queryrecord
+## 获取用户搜索记录
 
-什么参数都不需要
+**method：**POST
 
-返回json：
+**url：**/user/queryrecord
+
+**cookie：**需要
+
+**参数：**无
+
+**返回json：**
 
 ```json
 [
@@ -303,13 +402,17 @@ url：/user/queryrecord
 ]
 ```
 
-# 插入用户搜索记录
+## 插入用户搜索记录
 
-method:POST
+**method：**POST
 
-url：/user/saverecord
+**url：**/user/saverecord
 
-formdata:
+**cookie：**需要
+
+**参数：**
+
+​	**formdata：**
 
 ```json
 {
@@ -318,5 +421,44 @@ formdata:
 }
 ```
 
-无返回值
+**返回json：**无
 
+## 检验登录状态
+
+**method：**POST
+
+**url：** /user/checklogin
+
+**cookie：**需要
+
+**参数：**无
+
+**返回json：**
+
+​	**未登录时（无Cookie）：**
+
+```json
+{
+    code:403
+    message:"未登录"
+}
+```
+
+​	**jsessionid超时（有Cookie）：**
+
+```json
+{
+    code:403
+    message:"session无效，请重新登录"
+}
+```
+
+​	**处于登录状态：**
+
+```json
+{
+	code:200
+	message:"已登录"
+	username:"XXX"
+}
+```
