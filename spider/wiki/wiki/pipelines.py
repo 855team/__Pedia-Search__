@@ -1,8 +1,3 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
 import pymongo
 import csv
 import os
@@ -13,13 +8,13 @@ class WikiPipeline:
 
     def open_spider(self, spider):
         node_header = ('page_id:ID', ':LABEL', 'title', 'weight')
-        self.node_csv_file = open('wiki/data/node.csv', 'a+')
+        self.node_csv_file = open('wiki/data/node.csv', 'a+', newline='', encoding='utf_8_sig')
         self.node_csv = csv.writer(self.node_csv_file)
         if os.path.getsize('wiki/data/node.csv') == 0:
             self.node_csv.writerow(node_header)
 
         relation_header = (':TYPE', ':START_ID', 'END_ID')
-        self.relation_csv_file = open('wiki/data/relation.csv', 'a+')
+        self.relation_csv_file = open('wiki/data/relation.csv', 'a+', newline='', encoding='utf_8_sig')
         self.relation_csv = csv.writer(self.relation_csv_file)
         if os.path.getsize('wiki/data/relation.csv') == 0:
             self.relation_csv.writerow(relation_header)
@@ -45,8 +40,6 @@ class WikiPipeline:
         self.node_csv.writerow(cur_node)
         for i in item_dict['linked_items']:
             self.relation_csv.writerow(('linkTo', cur_id, i['page_id']))
-
-
 
         # Neo4j Server
         # graph = Graph('bolt://59.110.238.59:10087', auth=('neo4j', 'pedia_search'))
