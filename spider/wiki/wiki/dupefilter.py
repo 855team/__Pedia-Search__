@@ -46,11 +46,6 @@ class UrlFilterAndAdd(object):
         return url_sha1
 
     def check_url(self, url):
-        """
-        新请求进来之后，判断是否已经抓过
-        :param url: 新请求
-        :return:
-        """
         sha1 = self.url_sha1(url)
         isExist = self.redis.sismember(self.key, sha1)
         return isExist
