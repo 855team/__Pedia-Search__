@@ -459,7 +459,7 @@ class Gragh extends Component {
     }
     render(){
         return(
-            <div>
+            <div data-testid="gragharea">
                 <Layout style={{width:1100,height:550,opacity:0.9}}>
                         <Content>
                             <div  style={{marginTop: 10,display: "flex"}}>

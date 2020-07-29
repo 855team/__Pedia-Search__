@@ -204,7 +204,7 @@ class IndexView extends React.Component {
                             value="right"
                             style={{ position: 'absolute', left: '2%', top: '3%' }}
                         >
-                            <Dropdown overlay={menu} >
+                            <Dropdown  overlay={menu} >
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                                     Welcome,{Global.getName()}
                                 </a>
@@ -212,18 +212,20 @@ class IndexView extends React.Component {
                         </ToggleButton>
                         :
                         <ToggleButton
+                            data-testid="notlogin"
                             value="right"
                             style={{ position: 'absolute', left: '3%', top: '3%' }}
                             onClick={() => {
                                 this.props.history.push("/login");
                             }}
                         >
-                            <AddCircleOutlineIcon/>
+                            <AddCircleOutlineIcon data-testid="tologin"/>
                         </ToggleButton>}
 
                     <CenterWrapper elevation={ 20 }>
                         <Title variant="h1">Pedia Search</Title>
                         <SearchInput
+                            data-testid="searchinput"
                             value={ this.state.searchText }
                             onChange={(event) => {
                                 this.setState({

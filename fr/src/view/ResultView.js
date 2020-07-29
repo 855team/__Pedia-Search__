@@ -379,13 +379,14 @@ class ResultView extends React.Component {
                         </ToggleButton>
                         :
                         <ToggleButton
+                            data-testid="notlogin"
                             value="right"
                             style={{ position: 'absolute', left: '3%', top: '3%' }}
                             onClick={() => {
                                 this.props.history.push("/login");
                             }}
                         >
-                            <AddCircleOutlineIcon/>
+                            <AddCircleOutlineIcon data-testid="tologin"/>
                         </ToggleButton>}
                     <SearchBarWrapper>
                         <Grid container>
@@ -397,6 +398,7 @@ class ResultView extends React.Component {
                             </Grid>
                             <Grid item xs={5}>
                                 <SearchInput
+                                    data-testid="searchinput"
                                     value={ this.state.searchText }
                                     onChange={(event) => {
                                         this.setState({
@@ -416,6 +418,7 @@ class ResultView extends React.Component {
                         </Grid>
                         <ToggleButtonGroup style={{ position: 'absolute', right: '5%', top: '3%' }}>
                             <ToggleButton
+                                data-testid="gragh1"
                                 value="left"
                                 onClick={() => {
                                     this.setState({
@@ -426,6 +429,7 @@ class ResultView extends React.Component {
                                 <Brightness5SharpIcon />
                             </ToggleButton>
                             <ToggleButton
+                                data-testid="gragh2"
                                 value="right"
                                 onClick={() => {
                                     this.setState({
@@ -437,12 +441,12 @@ class ResultView extends React.Component {
                             </ToggleButton>
                         </ToggleButtonGroup>
                     </SearchBarWrapper>
-                    <Grid container>
+                    <Grid container data-testid="gragh1-container">
                         <Grid item xs={1} />
                         <Grid item xs={5}>
                             <AreaWrapper>
                                 {this.state.gragh==-1?null:(this.state.gragh==1?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>
-                                :<Gragh data={this.state.context} history={this.props.history}/>)}
+                                :<Gragh data-testid="initgragh" data={this.state.context} history={this.props.history}/>)}
                             </AreaWrapper>
                         </Grid>
                         <Grid item xs={1} />

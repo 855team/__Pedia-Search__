@@ -20,13 +20,13 @@ class RegisterForm extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form onSubmit={this.handleSubmit} className="login-form" data-testid="submitform">
                 <Form.Item>
                     {getFieldDecorator('username', {
                         rules: [{ required: true, message: 'Please input your username!' }],
                     })(
                         <Input
-                            placeholder="Username"
+                            placeholder="Username" data-testid="uinput"
                         />,
                     )}
                 </Form.Item>
@@ -37,6 +37,7 @@ class RegisterForm extends React.Component {
                         <Input
                             type="password"
                             placeholder="输入密码"
+                            data-testid="pinput"
                         />,
                     )}
                 </Form.Item>
