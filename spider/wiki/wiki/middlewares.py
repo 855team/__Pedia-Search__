@@ -5,7 +5,7 @@ from scrapy.utils.python import global_object_name
 class WikiRetryMiddleware(RetryMiddleware):
     def __init__(self, settings):
         super().__init__(settings)
-        self.file_log = open('wiki/data/retry.txt', 'a+')
+        self.file_log = open('wiki/data/retry.txt', 'a+', newline='', encoding='utf_8_sig')
 
     def __del__(self):
         self.file_log.close()
