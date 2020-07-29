@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d1e3959-20aa-4e01-abe0-9ca7f3349f38" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../wiki/wiki/dupefilter.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wiki/wiki/dupefilter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../wiki/wiki/middlewares.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wiki/wiki/middlewares.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../wiki/wiki/pipelines.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wiki/wiki/pipelines.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../wiki/wiki/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wiki/wiki/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +95,7 @@
       <workItem from="1595905951500" duration="223000" />
       <workItem from="1595906740766" duration="32000" />
       <workItem from="1595906933384" duration="4951000" />
-      <workItem from="1595931268188" duration="328000" />
+      <workItem from="1595931268188" duration="1172000" />
     </task>
     <servers />
   </component>
