@@ -1,5 +1,6 @@
-package com.example.backend;
+package com.example.backend.ControllerTest;
 
+import com.example.backend.Controller.SearchController;
 import com.example.backend.Entity.Entry;
 import com.example.backend.Service.EntityService;
 import com.example.backend.Service.EntryService;
@@ -28,16 +29,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @WebAppConfiguration
-public class ControllerTest {
+public class SearchControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
+
+    @Autowired
+    private SearchController searchController;
 
     @MockBean
     private EntityService entityService;
@@ -52,7 +56,7 @@ public class ControllerTest {
 
     @Test
     public void Neo4jTest() throws Exception{
-        RequestBuilder req = MockMvcRequestBuilders.get("/neo4j")
+        RequestBuilder req = MockMvcRequestBuilders.post("/search/related")
                 .param("keyword","上海")
                 .accept(MediaType.ALL)
                 .contentType(MediaType.ALL);
@@ -79,21 +83,53 @@ public class ControllerTest {
 
     @Test
     public void MongodbTest() throws Exception{
-        RequestBuilder req = MockMvcRequestBuilders.get("/mongodb")
+        RequestBuilder req = MockMvcRequestBuilders.post("/search/wiki")
                 .param("keyword","上海")
                 .accept(MediaType.ALL)
                 .contentType(MediaType.ALL);
 
-        BasicBSONObject bsonObject = new BasicBSONObject();
-        bsonObject.append("title","文化");
-        bsonObject.append("text","balabala");
+        Map<String,Object> map = new HashMap<>();
+        map.put("title","上海");
+        map.put("text","balabala");
+
+        BasicBSONList linkedwords = new BasicBSONList();
+        linkedwords.add("1");
+        linkedwords.add("2");
+        map.put("linked_words",linkedwords);
 
         BasicBSONList sections = new BasicBSONList();
-        bsonObject.append("sections",sections);
+        map.put("sections",sections);
 
-        Entry entry = new Entry("上海",1123,bsonObject);
 
-        when(entryService.findByTitle(anyString())).thenReturn(entry);
+        when(entryService.findByTitle(anyString())).thenReturn(map);
+
+        MvcResult result = mockMvc.perform(req)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void PageIdTest() throws Exception{
+        RequestBuilder req = MockMvcRequestBuilders.post("/search/page_id")
+                .param("page_id","1")
+                .accept(MediaType.ALL)
+                .contentType(MediaType.ALL);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("title","上海");
+        map.put("text","balabala");
+
+        BasicBSONList linkedwords = new BasicBSONList();
+        linkedwords.add("1");
+        linkedwords.add("2");
+        map.put("linked_words",linkedwords);
+
+        BasicBSONList sections = new BasicBSONList();
+        map.put("sections",sections);
+
+
+        when(entryService.findByPage_id(anyInt())).thenReturn(map);
 
         MvcResult result = mockMvc.perform(req)
                 .andDo(MockMvcResultHandlers.print())

@@ -1,4 +1,4 @@
-package com.example.backend;
+package com.example.backend.DaoTest;
 
 import com.example.backend.Dao.EntityDao;
 import com.example.backend.Dao.EntryDao;
@@ -15,30 +15,33 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 @SpringBootTest
-public class DaoTest {
+public class EntryDaoTest {
     @Autowired
     private EntryDao entryDao;
 
-    @Autowired
-    private EntityDao entityDao;
-
     @Test
-    public void entityDaoTest(){
-        Entity entity = entityDao.findByName("上海");
-        Assertions.assertAll(
-                () -> Assertions.assertEquals("上海",entity.getName()),
-                () -> Assertions.assertEquals(2,entity.getEntitySet().size())
-        );
-    }
-
-    @Test
-    public void entryDaoTest(){
-        Entry entry = entryDao.findByTitle("上海");
+    public void FindByKeywordTest(){
+        Entry entry = entryDao.findByTitle("历史");
         LinkedHashMap<String,Object> diritem = (LinkedHashMap<String,Object>)
                 ((ArrayList<Object>) entry.getSections().get("sections")).get(0);
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals("上海",entry.getTitle()),
+                () -> Assertions.assertEquals("历史",entry.getTitle()),
+                () -> Assertions.assertTrue(diritem.containsKey("title")),
+                () -> Assertions.assertTrue(diritem.containsKey("text")),
+                () -> Assertions.assertTrue(diritem.containsKey("linked_words")),
+                () -> Assertions.assertTrue(diritem.containsKey("sections"))
+        );
+    }
+
+    @Test
+    public void FindByPageIdTest(){
+        Entry entry = entryDao.findByPage_id(22);
+        LinkedHashMap<String,Object> diritem = (LinkedHashMap<String,Object>)
+                ((ArrayList<Object>) entry.getSections().get("sections")).get(0);
+
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("历史",entry.getTitle()),
                 () -> Assertions.assertTrue(diritem.containsKey("title")),
                 () -> Assertions.assertTrue(diritem.containsKey("text")),
                 () -> Assertions.assertTrue(diritem.containsKey("linked_words")),

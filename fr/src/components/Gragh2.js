@@ -22,9 +22,9 @@ class Gragh2 extends Component {
     parsenode(){
         let data=this.props.data;
         let tmp=[];
-        tmp.push({ name: data.title, type:"center"})
+        tmp.push({ name: data.title, type:"center",index:0})
         for(let i=0;i<data.linked_words.length;i++){
-            let a={ name: data.linked_words[i].title};
+            let a={ name: data.linked_words[i].title,index:i+1};
             tmp.push(a)
         }
         return tmp;
@@ -69,9 +69,9 @@ class Gragh2 extends Component {
         links.forEach((link)=> {
             //利用source和target名称进行连线以及节点的确认
             link.source = nodeDict[link.source]
-            nodes[link.source.name] = link.source
+            nodes[link.source.index] = link.source
             link.target = nodeDict[link.target]
-            nodes[link.target.name] = link.target
+            nodes[link.target.index] = link.target
         });
 
         //默认的节点配色方案
@@ -251,7 +251,7 @@ class Gragh2 extends Component {
                 //再次点击还原
                 edges_line.style("stroke-width", function (line) {
                     //当与连接点连接时变粗
-                    if ((line.source.name == node.name || line.target.name == node.name) ) {
+                    if ((line.source.name === node.name || line.target.name === node.name) ) {
                         if (line.focus && node.focus){
                             line.focus = false;
                             return 1;
@@ -282,6 +282,7 @@ class Gragh2 extends Component {
             })
             .on("dblclick", function (node) {
                 his.push("/search/"+node.name);
+                window.location.reload();
             })
             .on("mouseover", function (d) {
                 //config：替换成需要回显的html

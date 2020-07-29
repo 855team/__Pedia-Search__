@@ -3,53 +3,77 @@ import "../css/self.css";
 import 'materialize-css';
 import "../css/kg.css";
 import { Toast } from 'react-materialize';
+import {Layout,Card,Input} from 'antd';
 import * as d3 from 'd3';
-import NodeContextMenu from "../components/NodeContextMenu";
+const { TextArea } =Input;
+const { Header, Footer, Sider, Content } = Layout;
 
 class Gragh extends Component {
     constructor(props){
         super(props);
         this.state={
             data: this.props.data,
+            originnode: this.parsenode(),
+            originlink : this.parselink(),
             t1_text : this.parsenode(),
             t2_text : this.parselink(),
-            nodeRightClickMenus: []
+            title:"未选中节点",
+            content:""
         }
     }
-    componentDidMount() {
-        this.draw();
+    setcard=(title,content)=>{
+        this.setState({
+            title:title,
+            content:content
+        })
     }
+    componentDidMount() {
+        if(this.props.data){
+            this.draw();
+        }
+
+    }
+
     parsenode(){
         let data=this.props.data;
         let tmp=[];
-        tmp.push({ name: data.title, type:"关键词",text:data.text})
-        for(let j=0;j<data.linked_words.length;j++){
-            tmp.push({ name: data.linked_words[j].text, type:"tags",text:""})
-        }
-        if(data.sections){
-            tmp=this.handlesection_node(tmp,data.sections,1)
+        if(data){
+            tmp.push({ name: data.title, type:"关键词",text:data.text,index:0,weight:1})
+            if(data.linked_words)
+                for(let j=0;j<data.linked_words.length;j++){
+                    tmp.push({ name: data.linked_words[j].text, type:"tags",text:"",weight:1,index:j+1})
+                }
+            if(data.sections){
+                tmp=this.handlesection_node(tmp,data.sections,1,data.linked_words.length)
+            }
         }
         return tmp;
     }
     parselink(){
         let data=this.props.data;
         let tmp=[];
-        for(let j=0;j<data.linked_words.length;j++){
-            tmp.push({ source: 0,target:j+1,rela:"关联词", type:"关联词"})
-        }
-        if(data.sections){
-            tmp=this.handlesection_link(tmp,data.sections,0)
+        if(data){
+            if(data.linked_words)
+                for(let j=0;j<data.linked_words.length;j++){
+                    tmp.push({ source: 0,target:j+1,rela:"关联词", type:"关联词"})
+                }
+            if(data.sections){
+                tmp=this.handlesection_link(tmp,data.sections,0)
+            }
         }
         return tmp;
     }
-    handlesection_node(array,sections,level){
+    handlesection_node(array,sections,level,index){
         for(let i=0;i<sections.length;i++){
-            array.push({ name: sections[i].title, type:"level"+level,text:sections[i].text})
+            index++;
+            array.push({ name: sections[i].title, type:"level"+level,text:sections[i].text,index:index,weight:1})
+            if(sections[i].linked_words)
             for(let j=0;j<sections[i].linked_words.length;j++){
-                array.push({ name: sections[i].linked_words[j].text, type:"tags",text:""})
+                index++;
+                array.push({ name: sections[i].linked_words[j].text, type:"tags",text:"",index:index,weight:1})
             }
             if(sections[i].sections){
-                array=this.handlesection_node(array,sections[i].sections,level+1)
+                array=this.handlesection_node(array,sections[i].sections,level+1,index)
             }
         }
         return array;
@@ -58,6 +82,7 @@ class Gragh extends Component {
         for(let i=0;i<sections.length;i++){
             let num=array.length+1
             array.push({ source: source,target:num,rela:"子目录", type:"子目录"})
+            if(sections[i].linked_words)
             for(let j=0;j<sections[i].linked_words.length;j++){
                 array.push({source: num,target:array.length+1,rela:"关联词", type:"关联词"})
             }
@@ -71,7 +96,11 @@ class Gragh extends Component {
     contentHook = (item)=>{
         return "<div>"+item.name+"</div>"
     }
+    demo=(name)=>{
+        //重新画图，还没想到好办法
+    }
     draw=()=> {
+
         try {
             let data = {}
 
@@ -82,26 +111,27 @@ class Gragh extends Component {
                 width: document.getElementById("container").clientWidth,
                 height: document.getElementById("container").clientHeight
             }
-            this.initKG(data, config, "#container")
+            console.log("draw",data)
+            this.initKG(data, config, "#container",this.setcard,this.demo)
         } catch (err) {
             Toast('渲染存在异常', 2000)
             console.info(err)
         }
     }
-    initKG = (data, config, container)=> {
+    initKG = (data, config, container,func,show)=> {
         //data:nodes 至少需要一个name
         let nodeDict = data.nodes;
         let links = data.links;
-        let nodes = {};
-
+        /*let nodes = {};           这部分代码有问题，但是画的效果更好
+        console.log("before",nodeDict);
         links.forEach((link)=> {
             //利用source和target名称进行连线以及节点的确认
             link.source = nodeDict[link.source]
-            nodes[link.source.name] = link.source
+            nodes[link.source.index] = link.source
             link.target = nodeDict[link.target]
-            nodes[link.target.name] = link.target
+            nodes[link.target.index] = link.target
         });
-
+        console.log("after",nodes)*/
         //默认的节点配色方案
 
         let defaultNodeColor = [
@@ -155,13 +185,13 @@ class Gragh extends Component {
 
         let force = d3.layout.force()
             //设定节点数组
-            .nodes(d3.values(nodes))
+            .nodes(nodeDict)
             //设定关系数组
             .links(links)
             //canvas大小
             .size([width, height])
             //连接线长度
-            .linkDistance(120)
+            .linkDistance(80)
             //作用力，大于0吸引小于0排斥
             .charge(-1200)
             //指时间间隔，隔一段时间刷新一次画面
@@ -212,7 +242,9 @@ class Gragh extends Component {
             //可以参考http://www.ourd3js.com/wordpress/797/ enter、exit、update的区别
             .append("path")//添加path标签
             .attr({
-                'd': function (d) { return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y },//变量 d 是由D3.js提供的一个在匿名函数中的可用变量。这个变量是对当前要处理的元素的_data_属性的引用。
+                'd': function (d) {
+                    return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y
+                },//变量 d 是由D3.js提供的一个在匿名函数中的可用变量。这个变量是对当前要处理的元素的_data_属性的引用。
                 'class': 'edgepath',//定义该path标签class为edgepath
                 'id': function (d, i) { return 'edgepath' + i; }
             })// i也是d3.js提供的变量，表示当前处理的HTML元素在已选元素选集中的索引值
@@ -266,16 +298,16 @@ class Gragh extends Component {
             .enter().append("circle")
             //config:背景色
             .style("fill", function (node) {
-
                 return colorDict[node.type].fill;
             })
             .style('stroke', function (node) {
                 //config:边框色
                 return colorDict[node.type].stroke;
             })
-            .attr("r", 30)
+            .attr("r", 25)
             .on("click", function (node) {
-                edges_line.style("stroke-width", function (line) {
+                show(node.name);
+                /*edges_line.style("stroke-width", function (line) {
                     //当与连接点连接时变粗
                     if ((line.source.name == node.name || line.target.name == node.name) ) {
                         if (line.focus && node.focus){
@@ -304,30 +336,10 @@ class Gragh extends Component {
                 }else{
                     d3.select(this).style('stroke-width', 1);
                 }
-                lastFocusNode = node;
+                lastFocusNode = node;*/
             })
             .on("dblclick", function (node) {
-
-                let nodeRightClickMenus = [];
-
-                // When ctrl is pressed, multiple context menu's are allowed
-                // Default is only 1
-
-                nodeRightClickMenus = this.state.nodeRightClickMenus;
-
-
-                const clickOffset = 1;
-                let rightClickMenuValue = {
-                    'x':node.x+clickOffset,
-                    'y':node.y+clickOffset,
-                    'node':node
-                };
-
-                // Add new context menu
-                nodeRightClickMenus.push(rightClickMenuValue);
-                this.setState({
-                    nodeRightClickMenus: nodeRightClickMenus,
-                });
+                func(node.name,node.text);
             })
             .on("mouseover", function (node) {
                 ;
@@ -448,21 +460,24 @@ class Gragh extends Component {
     render(){
         return(
             <div>
-            <div className="row" style={{marginTop: 10,display: "flex"}}>
-                <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
-                    <div className="card">
-                        <div id="container" className="card-image container" style={{width:"1156px", height:"500px"}}>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {this.state.nodeRightClickMenus.map(function(nodeRightClickMenu){
-                return (<NodeContextMenu
-                x={nodeRightClickMenu.x}
-                y={nodeRightClickMenu.y}
-                node={nodeRightClickMenu.node}
-                key={nodeRightClickMenu.node.id} />);
-            })}
+                <Layout style={{width:1100,height:550,opacity:0.9}}>
+                        <Content>
+                            <div  style={{marginTop: 10,display: "flex"}}>
+                                <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
+                                    <div className="card">
+                                        <div id="container" className="card-image container" style={{width:"1000px", height:"500px"}}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Content>
+                        <Sider width={300} className="site-layout-background" style={{overflowY: 'auto'}}>
+                            <Card title={this.state.title}  style={{ height:5000,width: 300 }}>
+                                <p>{this.state.content}</p>
+                            </Card>
+                        </Sider>
+                </Layout>
+
             </div>
         )
     }

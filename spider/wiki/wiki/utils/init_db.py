@@ -1,4 +1,4 @@
-from py2neo import Graph,Node,Relationship, NodeMatcher
+from py2neo import Graph
 import pymongo
 
 # Neo4j

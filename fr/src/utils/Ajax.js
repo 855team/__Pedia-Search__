@@ -9,7 +9,6 @@ let postRequest_v2 = (url,data,callback) => {
 
     let opts={
         method: "POST",
-        mode:"no-cors",
         body: formData,
         //credentials: "include"
     }
@@ -26,16 +25,19 @@ let postRequest_v2 = (url,data,callback) => {
         })
 }
 
-let postRequest = (url,json,callback) => {
+let postRequest_v3 = (url,data,callback) => {
+    let formData=new FormData();
+
+    for(let p in data){
+        if(data.hasOwnProperty(p)){
+            formData.append(p,data[p])
+        }
+    }
 
     let opts={
         method: "POST",
-        mode:"no-cors",
-        body: JSON.stringify(json),
-        headers:{
-            'Content-Type':'application/json'
-        },
-        //credentials: "include"
+        body: formData,
+        credentials: "include"
     }
 
     fetch(url,opts)
@@ -50,4 +52,5 @@ let postRequest = (url,json,callback) => {
         })
 }
 
-export{postRequest_v2,postRequest};
+
+export{postRequest_v2,postRequest_v3};
