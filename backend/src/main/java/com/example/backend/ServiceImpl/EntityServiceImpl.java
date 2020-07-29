@@ -4,16 +4,20 @@ import com.example.backend.Dao.EntityDao;
 import com.example.backend.Entity.Entity;
 import com.example.backend.Service.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@CacheConfig(cacheNames = "lastResult")
 public class EntityServiceImpl implements EntityService {
     @Autowired
     private EntityDao entityDao;
 
     @Override
+    @Cacheable
     public Map<String,Object> findByKeyword(String keyword){
         Entity target = entityDao.findByName(keyword);
 

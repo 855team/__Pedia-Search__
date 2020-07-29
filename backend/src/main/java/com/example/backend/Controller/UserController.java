@@ -28,15 +28,15 @@ public class UserController {
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ){
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        System.out.println(ft.format(new Date())+" --- Register: "+username);
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//        System.out.println(ft.format(new Date())+" --- Register: "+username);
         return userService.Register(username,password);
     }
 
     @PostMapping(value = "/queryrecord")
     public List<Map<String,Object>> findRecord(Principal principal){
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        System.out.println(ft.format(new Date())+" --- Query record: "+principal.getName());
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//        System.out.println(ft.format(new Date())+" --- Query record: "+principal.getName());
 
         return userService.QueryRecord(principal.getName());
     }
@@ -47,16 +47,16 @@ public class UserController {
             @RequestParam("last_keyword") String last_keyword,
             Principal principal
     ){
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        System.out.println(ft.format(new Date())+" --- Save record: "+principal.getName());
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//        System.out.println(ft.format(new Date())+" --- Save record: "+principal.getName());
 
         userService.SaveRecord(principal.getName(),keyword,last_keyword);
     }
 
     @PostMapping(value = "/checklogin")
     public Map<String,Object> checkLogin(Principal principal){
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        System.out.println(ft.format(new Date())+" --- Check login: "+principal.getName());
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//        System.out.println(ft.format(new Date())+" --- Check login: "+principal.getName());
 
         Map<String,Object> map = new HashMap<>();
 

@@ -83,8 +83,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 })
                 //登录成功，返回json
                 .successHandler((request,response,authentication) -> {
-                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-                    System.out.println(ft.format(new Date())+" --- Login: "+authentication.getName());
+//                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//                    System.out.println(ft.format(new Date())+" --- Login: "+authentication.getName());
 
 
                     Map<String,Object> map = new HashMap<String,Object>();
@@ -119,8 +119,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //退出成功，返回json
                 .logoutSuccessHandler((request,response,authentication) -> {
 
-                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-                    System.out.println(ft.format(new Date())+" --- Logout");
+//                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//                    System.out.println(ft.format(new Date())+" --- Logout");
 
                     Map<String,Object> map = new HashMap<String,Object>();
                     map.put("code",200);
@@ -138,8 +138,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .invalidSessionStrategy((HttpServletRequest request, HttpServletResponse response) -> {
-                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-                    System.out.println(ft.format(new Date())+" --- Session Timeout");
+//                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//                    System.out.println(ft.format(new Date())+" --- Session Timeout");
 
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);

@@ -6,17 +6,21 @@ import com.example.backend.Service.EntryService;
 import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@CacheConfig(cacheNames = "lastResult")
 public class EntryServiceImpl implements EntryService {
     @Autowired
     private EntryDao entryDao;
 
     @Override
+    @Cacheable
     public Map<String,Object> findByTitle(String title){
         Entry entry = entryDao.findByTitle(title);
         Map<String,Object> map = new HashMap<>();
@@ -43,6 +47,7 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
+    @Cacheable
     public Map<String,Object> findByPage_id(int page_id){
         Entry entry = entryDao.findByPage_id(page_id);
         Map<String,Object> map = new HashMap<>();
