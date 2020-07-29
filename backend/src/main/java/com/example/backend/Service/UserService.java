@@ -9,7 +9,7 @@ public interface UserService {
 
     List<Map<String,Object>> QueryRecord(String username);
 
-    void SaveRecord(String username,String keyword,String last_keyword);
+    User SaveRecord(String username,String keyword,String last_keyword);
 
     int Register(String username,String password);
 }

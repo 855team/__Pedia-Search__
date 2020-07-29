@@ -44,6 +44,16 @@ public class Queryrecord {
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Timestamp queryTime;
 
+    public Queryrecord(){};
+
+    public Queryrecord(int queryId,int userId,String keyword,String last_keyword,Timestamp queryTime){
+        this.queryId = queryId;
+        this.userId = userId;
+        this.keyword = keyword;
+        this.last_keyword = last_keyword;
+        this.queryTime = queryTime;
+    }
+
     public int getQueryId(){
         return this.queryId;
     }
