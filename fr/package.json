@@ -11,6 +11,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "antd": "^3.24.3",
+    "cypress": "^4.11.0",
     "d3": "3.x",
     "history": "^5.0.0",
     "materialize-css": "^1.0.0",

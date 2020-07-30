@@ -37,7 +37,7 @@ export const register = (data,his) => {
             message.success("注册成功");
         }
     };
-    postRequest_v3(url, data, callback);
+    postRequest_v2(url, data, callback);
 };
 
 

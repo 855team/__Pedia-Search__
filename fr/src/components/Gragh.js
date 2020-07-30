@@ -461,7 +461,7 @@ class Gragh extends Component {
         return(
             <div data-testid="gragharea">
                 <Layout style={{width:1100,height:550,opacity:0.9}}>
-                        <Content>
+                        <Content data-testid="content">
                             <div  style={{marginTop: 10,display: "flex"}}>
                                 <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
                                     <div className="card">
@@ -471,8 +471,8 @@ class Gragh extends Component {
                                 </div>
                             </div>
                         </Content>
-                        <Sider width={300} className="site-layout-background" style={{overflowY: 'auto'}}>
-                            <Card title={this.state.title}  style={{ height:5000,width: 300 }}>
+                        <Sider width={300} className="site-layout-background" style={{overflowY: 'auto'}} data-testid="sider">
+                            <Card title={this.state.title}  style={{ height:5000,width: 300 }} data-testid="card">
                                 <p>{this.state.content}</p>
                             </Card>
                         </Sider>

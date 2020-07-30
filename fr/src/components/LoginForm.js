@@ -43,10 +43,10 @@ class LoginForm extends React.Component {
                     )}
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button type="primary" data-textid="submit2" htmlType="submit" className="login-form-button">
                         Log in
                     </Button>
-                    <a href="/register">立即注册</a>
+                    <a href="/register" data-textid="toregister">立即注册</a>
                 </Form.Item>
             </Form>
         );

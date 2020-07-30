@@ -1,4 +1,4 @@
-import {render} from "@testing-library/react";
+import {fireEvent, render} from "@testing-library/react";
 import LoginView from "../view/LoginView";
 import React from "react";
 
@@ -12,7 +12,15 @@ test('register', () => {
     expect(getByTestId('pinput')).toHaveAttribute('type', 'password');
     expect(getByTestId('pinput')).toHaveAttribute('placeholder', 'Password');
     expect(getByTestId('loginform')).not.toBeEmpty();
-    expect(getByTestId('submitform')).not.toBeEmpty();
+
+    const uinput = getByTestId('uinput');
+    fireEvent.change(uinput, { target: { value: 'test' } });
+    expect(uinput).toHaveProperty('value','test');
+
+    const pinput = getByTestId('pinput');
+    fireEvent.change(pinput, { target: { value: 'test' } });
+    expect(pinput).toHaveProperty('value','test');
+
 
 });
 
