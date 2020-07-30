@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@CacheConfig(cacheNames = "lastResult")
+@CacheConfig(cacheNames = "wikiResult")
 public class EntryServiceImpl implements EntryService {
     @Autowired
     private EntryDao entryDao;
