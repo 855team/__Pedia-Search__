@@ -121,7 +121,7 @@ class IndexView extends React.Component {
             historyquery:[]
         };
     }
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({
             theme: Global.get('theme'),
         });
@@ -133,9 +133,10 @@ class IndexView extends React.Component {
             if(data.code==200){
                 Global.set('login',1);
                 Global.set('username',data.username)
+                this.props.history.push('/index')
             }
         }
-        checklogin(callback);
+        await checklogin(callback);
         let callback2=(data)=>{
             this.setState({
                 historyquery:data
@@ -175,12 +176,12 @@ class IndexView extends React.Component {
         const menu = (
             <Menu>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer}>
+                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer} className="showhistory">
                         我的浏览历史
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={this.loggout.bind(this)}>
+                    <a target="_blank" rel="noopener noreferrer" onClick={this.loggout.bind(this)} className="tologout">
                         登出
                     </a>
                 </Menu.Item>
@@ -191,6 +192,7 @@ class IndexView extends React.Component {
                 <Container>
                     {Global.Islogin()?
                     <Drawer
+                        className="drawer"
                         title="浏览历史"
                         placement="right"
                         closable={true}
@@ -204,7 +206,7 @@ class IndexView extends React.Component {
                             value="right"
                             style={{ position: 'absolute', left: '2%', top: '3%' }}
                         >
-                            <Dropdown  overlay={menu} >
+                            <Dropdown  overlay={menu} className="dropdown">
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                                     Welcome,{Global.getName()}
                                 </a>
@@ -219,12 +221,13 @@ class IndexView extends React.Component {
                                 this.props.history.push("/login");
                             }}
                         >
-                            <AddCircleOutlineIcon data-testid="tologin"/>
+                            <AddCircleOutlineIcon className="tologin" data-testid="tologin"/>
                         </ToggleButton>}
 
                     <CenterWrapper elevation={ 20 }>
                         <Title variant="h1">Pedia Search</Title>
                         <SearchInput
+                            className="searchinput"
                             data-testid="searchinput"
                             value={ this.state.searchText }
                             onChange={(event) => {

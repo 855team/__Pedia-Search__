@@ -342,12 +342,12 @@ class ResultView extends React.Component {
         const menu = (
             <Menu>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer}>
+                    <a target="_blank" rel="noopener noreferrer" className="showhistory" onClick={showDrawer}>
                         我的浏览历史
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={this.loggout.bind(this)}>
+                    <a target="_blank" rel="noopener noreferrer" className="tologout" onClick={this.loggout.bind(this)}>
                         登出
                     </a>
                 </Menu.Item>
@@ -358,6 +358,7 @@ class ResultView extends React.Component {
                 <Container>
                     {Global.Islogin()?
                         <Drawer
+                            className="drawer"
                             title="浏览历史"
                             placement="right"
                             closable={true}
@@ -371,7 +372,7 @@ class ResultView extends React.Component {
                             value="right"
                             style={{ position: 'absolute', left: '2%', top: '3%' }}
                         >
-                            <Dropdown overlay={menu} >
+                            <Dropdown overlay={menu} className="dropdown" >
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                                     Welcome,{Global.getName()}
                                 </a>
@@ -386,7 +387,7 @@ class ResultView extends React.Component {
                                 this.props.history.push("/login");
                             }}
                         >
-                            <AddCircleOutlineIcon data-testid="tologin"/>
+                            <AddCircleOutlineIcon className="tologin" data-testid="tologin"/>
                         </ToggleButton>}
                     <SearchBarWrapper>
                         <Grid container>
@@ -411,6 +412,7 @@ class ResultView extends React.Component {
                                                 dataReady: false
                                             });
                                             this.props.history.push('/search/' + this.state.searchText);
+                                            window.location.reload();
                                         }
                                     }}
                                 />

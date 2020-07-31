@@ -26,7 +26,7 @@ class RegisterForm extends React.Component {
                         rules: [{ required: true, message: 'Please input your username!' }],
                     })(
                         <Input
-                            placeholder="Username" data-testid="uinput"
+                            placeholder="Username" data-testid="uinput" className="uinput"
                         />,
                     )}
                 </Form.Item>
@@ -38,6 +38,7 @@ class RegisterForm extends React.Component {
                             type="password"
                             placeholder="输入密码"
                             data-testid="pinput"
+                            className="pinput"
                         />,
                     )}
                 </Form.Item>

@@ -27,7 +27,7 @@ class LoginForm extends React.Component {
                         rules: [{ required: true, message: 'Please input your username!' }],
                     })(
                         <Input
-                            placeholder="Username" data-testid="uinput"
+                            placeholder="Username" data-testid="uinput" className="uinput"
                         />,
                     )}
                 </Form.Item>
@@ -39,6 +39,7 @@ class LoginForm extends React.Component {
                             type="password"
                             placeholder="Password"
                             data-testid="pinput"
+                            className="pinput"
                         />,
                     )}
                 </Form.Item>
@@ -46,7 +47,7 @@ class LoginForm extends React.Component {
                     <Button type="primary" data-textid="submit2" htmlType="submit" className="login-form-button">
                         Log in
                     </Button>
-                    <a href="/register" data-textid="toregister">立即注册</a>
+                    <a href="/register" data-textid="toregister" className="toregister">立即注册</a>
                 </Form.Item>
             </Form>
         );

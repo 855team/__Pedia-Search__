@@ -17,6 +17,7 @@
       <sshConfig host="47.113.103.137" id="afceb48b-27eb-4f93-b69c-65f82df8b887" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
       <sshConfig host="47.113.103.137" id="21ac509d-f2af-4a1a-b81e-a659bacc85fc" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
       <sshConfig host="47.113.103.137" id="af68da24-eb46-4f4d-9e74-978f796f3f26" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
+      <sshConfig host="47.113.103.137" id="f3adf086-4f74-44c3-b6bb-bba5d1660307" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="Pedia-Search" nameFormat="CUSTOM" />
     </configs>
   </component>
 </project>

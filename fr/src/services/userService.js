@@ -8,11 +8,15 @@ import cookie from 'react-cookies'
 
 export const login = (data,his) => {
     const url = `http://49.235.245.206:8080/login`;
+    message.config({
+        prefixCls: 'my-message',
+        className: 'my-message'
+    });
     console.log("data:",data);
     const callback = (data) => {
         console.log("login",data)
         if(data.code == 401) {
-            message.error(data.message);
+            alert(data.message);
         }
         if(data.code == 200){
             Global.set('login',1);
@@ -27,6 +31,10 @@ export const login = (data,his) => {
 export const register = (data,his) => {
     const url = `http://49.235.245.206:8080/user/register`;
     console.log("data:",data);
+    message.config({
+        prefixCls: 'my-message',
+        className: 'my-message'
+    });
     const callback = (data) => {
         console.log("register",data)
         if(data== 0) {
@@ -43,6 +51,10 @@ export const register = (data,his) => {
 
 export const logout = (his) => {
     const url = `http://49.235.245.206:8080/logout`;
+    message.config({
+        prefixCls: 'my-message',
+        className: 'my-message'
+    });
     const callback = (data) => {
         if(data.code == 200) {
             //cookie.remove('JSESSIONID');
