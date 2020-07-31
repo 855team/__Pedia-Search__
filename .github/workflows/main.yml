@@ -1,0 +1,32 @@
+name: Staging-frontend
+
+on:
+  push:
+    branches: [ master, develop ]
+    
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      working-directory-frontend: ./fr
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Install Packages
+      run: npm install
+      working-directory: ${{env.working-directory-frontend}}
+      
+    - name: Build with npm
+      run: npm run build
+      working-directory: ${{env.working-directory-frontend}}
+      
+    - name: Unit Test for frontend
+      run: npm run test
+      working-directory: ${{env.working-directory-frontend}}
