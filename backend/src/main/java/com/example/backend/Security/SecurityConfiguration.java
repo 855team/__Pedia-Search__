@@ -189,7 +189,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         //对默认的UserDetailsService进行覆盖
         authenticationProvider.setUserDetailsService(userDetailsService);
