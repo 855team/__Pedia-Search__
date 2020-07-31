@@ -1,6 +1,5 @@
 import React from 'react';
 import WrappedLoginForm from '../components/LoginForm';
-import {withRouter} from "react-router-dom";
 
 
 class LoginView extends React.Component{
@@ -12,7 +11,7 @@ class LoginView extends React.Component{
                 <div className="login-container">
                     <div className="login-box">
                         <h1 className="page-title">Welcome to PediaSearch</h1>
-                        <div className="login-content">
+                        <div className="login-content" data-testid="loginform">
                             <WrappedLoginForm history={this.props.history}/>
                         </div>
                     </div>
@@ -23,4 +22,4 @@ class LoginView extends React.Component{
     }
 }
 
-export default withRouter(LoginView);
+export default LoginView;

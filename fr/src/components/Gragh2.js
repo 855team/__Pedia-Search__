@@ -22,20 +22,25 @@ class Gragh2 extends Component {
     parsenode(){
         let data=this.props.data;
         let tmp=[];
-        tmp.push({ name: data.title, type:"center",index:0})
-        for(let i=0;i<data.linked_words.length;i++){
-            let a={ name: data.linked_words[i].title,index:i+1};
-            tmp.push(a)
+        if(data){
+            tmp.push({ name: data.title, type:"center",index:0})
+            if(data.linked_words){
+                for(let i=0;i<data.linked_words.length;i++){
+                    let a={ name: data.linked_words[i].title,index:i+1};
+                    tmp.push(a)
+                }
+            }
         }
         return tmp;
-
     }
     parselink(){
         let data=this.props.data;
         let tmp=[];
-        for(let i=0;i<data.linked_words.length;i++){
-            let a={ source: 0, target: i+1, rela: data.linked_words[i].weight, type: "包含关系" };
-            tmp.push(a)
+        if(data){
+            for(let i=0;i<data.linked_words.length;i++){
+                let a={ source: 0, target: i+1, rela: data.linked_words[i].weight, type: "包含关系" };
+                tmp.push(a)
+            }
         }
         return tmp;
     }
@@ -412,10 +417,10 @@ class Gragh2 extends Component {
     }
     render(){
         return(
-            <div className="row" style={{marginTop: 10,display: "flex"}}>
+            <div className="row" data-testid="Gragh2" style={{marginTop: 10,display: "flex"}}>
                 <div className="col s12 m7" style={{float: "right",marginRight: "4rem"}}>
                     <div className="card">
-                        <div id="container2" className="card-image container" style={{width:"1156px", height:"500px" }}>
+                        <div id="container2" data-testid="container2" className="card-image container" style={{width:"1156px", height:"500px" }}>
                         </div>
                     </div>
                 </div>

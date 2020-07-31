@@ -342,12 +342,12 @@ class ResultView extends React.Component {
         const menu = (
             <Menu>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={showDrawer}>
+                    <a target="_blank" rel="noopener noreferrer" className="showhistory" onClick={showDrawer}>
                         我的浏览历史
                     </a>
                 </Menu.Item>
                 <Menu.Item>
-                    <a target="_blank" rel="noopener noreferrer" onClick={this.loggout.bind(this)}>
+                    <a target="_blank" rel="noopener noreferrer" className="tologout" onClick={this.loggout.bind(this)}>
                         登出
                     </a>
                 </Menu.Item>
@@ -358,6 +358,7 @@ class ResultView extends React.Component {
                 <Container>
                     {Global.Islogin()?
                         <Drawer
+                            className="drawer"
                             title="浏览历史"
                             placement="right"
                             closable={true}
@@ -371,7 +372,7 @@ class ResultView extends React.Component {
                             value="right"
                             style={{ position: 'absolute', left: '2%', top: '3%' }}
                         >
-                            <Dropdown overlay={menu} >
+                            <Dropdown overlay={menu} className="dropdown" >
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                                     Welcome,{Global.getName()}
                                 </a>
@@ -379,13 +380,14 @@ class ResultView extends React.Component {
                         </ToggleButton>
                         :
                         <ToggleButton
+                            data-testid="notlogin"
                             value="right"
                             style={{ position: 'absolute', left: '3%', top: '3%' }}
                             onClick={() => {
                                 this.props.history.push("/login");
                             }}
                         >
-                            <AddCircleOutlineIcon/>
+                            <AddCircleOutlineIcon className="tologin" data-testid="tologin"/>
                         </ToggleButton>}
                     <SearchBarWrapper>
                         <Grid container>
@@ -397,6 +399,7 @@ class ResultView extends React.Component {
                             </Grid>
                             <Grid item xs={5}>
                                 <SearchInput
+                                    data-testid="searchinput"
                                     value={ this.state.searchText }
                                     onChange={(event) => {
                                         this.setState({
@@ -409,6 +412,7 @@ class ResultView extends React.Component {
                                                 dataReady: false
                                             });
                                             this.props.history.push('/search/' + this.state.searchText);
+                                            window.location.reload();
                                         }
                                     }}
                                 />
@@ -416,6 +420,7 @@ class ResultView extends React.Component {
                         </Grid>
                         <ToggleButtonGroup style={{ position: 'absolute', right: '5%', top: '3%' }}>
                             <ToggleButton
+                                data-testid="gragh1"
                                 value="left"
                                 onClick={() => {
                                     this.setState({
@@ -426,6 +431,7 @@ class ResultView extends React.Component {
                                 <Brightness5SharpIcon />
                             </ToggleButton>
                             <ToggleButton
+                                data-testid="gragh2"
                                 value="right"
                                 onClick={() => {
                                     this.setState({
@@ -437,12 +443,12 @@ class ResultView extends React.Component {
                             </ToggleButton>
                         </ToggleButtonGroup>
                     </SearchBarWrapper>
-                    <Grid container>
+                    <Grid container data-testid="gragh1-container">
                         <Grid item xs={1} />
                         <Grid item xs={5}>
                             <AreaWrapper>
                                 {this.state.gragh==-1?null:(this.state.gragh==1?<Gragh2 data={this.state.relatedtags} history={this.props.history}/>
-                                :<Gragh data={this.state.context} history={this.props.history}/>)}
+                                :<Gragh data-testid="initgragh" data={this.state.context} history={this.props.history}/>)}
                             </AreaWrapper>
                         </Grid>
                         <Grid item xs={1} />

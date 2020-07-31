@@ -1,0 +1,48 @@
+context('index', () => {
+    beforeEach(() => {
+        cy.visit('http://localhost:3000/index')
+    })
+    it('search', () => {
+        cy.get('.searchinput').type('Reason')
+        cy.get('.searchinput').type('\n')
+        cy.title('localhost:3000/search/Reason')
+    })
+    it('login', () => {
+        cy.get('.tologin').click()
+        cy.title('localhost:3000/login')
+    })
+    it('logout', () => {
+        cy.get('.tologin').click()
+        cy.title('localhost:3000/login')
+        cy.get('.uinput').type('test')
+        cy.get('.pinput').type('test')
+        cy.get('.login-form-button').click()
+        cy.wait(500)
+        cy.get('.dropdown').trigger('mouseover').get('.tologout').click()
+        cy.get('.my-message').contains('退出成功')
+        cy.title('localhost:3000/index')
+    })
+    it('showhistory', () => {
+        cy.get('.tologin').click()
+        cy.title('localhost:3000/login')
+        cy.get('.uinput').type('test')
+        cy.get('.pinput').type('test')
+        cy.get('.login-form-button').click()
+        cy.wait(500)
+        cy.get('.dropdown').trigger('mouseover').get('.showhistory').click()
+        cy.get('.drawer').contains('浏览历史')
+        cy.get('.ant-drawer-close').click()
+        cy.get('.dropdown').trigger('mouseover').get('.tologout').click()
+    })
+    it('reload',()=>{
+        cy.get('.tologin').click()
+        cy.title('localhost:3000/login')
+        cy.get('.uinput').type('test')
+        cy.get('.pinput').type('test')
+        cy.get('.login-form-button').click()
+        cy.wait(500)
+        cy.reload();
+        cy.get('.dropdown').contains('Welcome,test')
+        cy.get('.dropdown').trigger('mouseover').get('.tologout').click()
+    })
+})
