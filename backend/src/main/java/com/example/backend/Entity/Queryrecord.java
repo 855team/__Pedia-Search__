@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import com.alibaba.fastjson.annotation.JSONField;
 
@@ -14,6 +16,8 @@ import java.sql.Timestamp;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "query_record",schema = "pedia_search")
 @JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"})
@@ -44,8 +48,6 @@ public class Queryrecord {
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Timestamp queryTime;
 
-    public Queryrecord(){};
-
     public Queryrecord(int queryId,int userId,String keyword,String last_keyword,Timestamp queryTime){
         this.queryId = queryId;
         this.userId = userId;
@@ -54,38 +56,38 @@ public class Queryrecord {
         this.queryTime = queryTime;
     }
 
-    public int getQueryId(){
-        return this.queryId;
-    }
-    public void setQueryId(int queryId){
-        this.queryId = queryId;
-    }
-
-    public int getUserId(){
-        return this.userId;
-    }
-    public void setUserId(int userId){
-        this.userId = userId;
-    }
-
-    public String getKeyword(){
-        return this.keyword;
-    }
-    public void setKeyword(String keyword){
-        this.keyword = keyword;
-    }
-
-    public String getLast_keyword(){
-        return this.last_keyword;
-    }
-    public void setLast_keyword(String last_keyword){
-        this.last_keyword = last_keyword;
-    }
-
-    public Timestamp getQueryTime(){
-        return this.queryTime;
-    }
-    public void setQueryTime(Timestamp queryTime){
-        this.queryTime = queryTime;
-    }
+//    public int getQueryId(){
+//        return this.queryId;
+//    }
+//    public void setQueryId(int queryId){
+//        this.queryId = queryId;
+//    }
+//
+//    public int getUserId(){
+//        return this.userId;
+//    }
+//    public void setUserId(int userId){
+//        this.userId = userId;
+//    }
+//
+//    public String getKeyword(){
+//        return this.keyword;
+//    }
+//    public void setKeyword(String keyword){
+//        this.keyword = keyword;
+//    }
+//
+//    public String getLast_keyword(){
+//        return this.last_keyword;
+//    }
+//    public void setLast_keyword(String last_keyword){
+//        this.last_keyword = last_keyword;
+//    }
+//
+//    public Timestamp getQueryTime(){
+//        return this.queryTime;
+//    }
+//    public void setQueryTime(Timestamp queryTime){
+//        this.queryTime = queryTime;
+//    }
 }

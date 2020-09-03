@@ -17,7 +17,7 @@ public class EntityDaoTest {
         Entity entity = entityDao.findByName("历史");
         Assertions.assertAll(
                 () -> Assertions.assertEquals("历史",entity.getName()),
-                () -> Assertions.assertEquals(272,entity.getEntitySet().size())
+                () -> Assertions.assertEquals(305,entity.getEntitySet().size())
         );
     }
 }
