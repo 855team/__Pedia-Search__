@@ -3,6 +3,7 @@ package com.example.backend.Controller;
 import com.example.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,17 @@ public class UserController {
         userService.SaveRecord(principal.getName(),keyword,last_keyword);
     }
 
+    @PostMapping(value = "/saverecord_anonymous")
+    public void saveRecord_root(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("last_keyword") String last_keyword
+    ){
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//        System.out.println(ft.format(new Date())+" --- Save record: "+principal.getName());
+
+        userService.SaveRecord("root",keyword,last_keyword);
+    }
+
     @PostMapping(value = "/checklogin")
     public Map<String,Object> checkLogin(Principal principal){
 //        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -65,5 +77,14 @@ public class UserController {
         map.put("username",principal.getName());
 
         return map;
+    }
+
+    @PostMapping(value = "/grant")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public int grant(@RequestParam("username") String username){
+        if(userService.Grant(username) != null)
+            return 1;
+        else
+            return 0;
     }
 }

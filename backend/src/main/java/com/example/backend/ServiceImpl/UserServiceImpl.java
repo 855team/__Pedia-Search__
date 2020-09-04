@@ -52,6 +52,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User Grant(String username) {
+        User user = userDao.findByUsername(username);
+        if(user != null){
+            user.setRole("ROLE_ADMIN");
+            return userDao.saveUser(user);
+        }
+        else
+            return null;
+    }
+
+    @Override
     public int Register(String username,String password){
         User user = userDao.findByUsername(username);
         if(user==null)

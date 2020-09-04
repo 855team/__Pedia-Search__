@@ -11,5 +11,7 @@ public interface UserService {
 
     User SaveRecord(String username,String keyword,String last_keyword);
 
+    User Grant(String username);
+
     int Register(String username,String password);
 }

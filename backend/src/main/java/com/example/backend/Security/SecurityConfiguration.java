@@ -98,21 +98,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.close();
                 })
 
-//                .and()
-//                .exceptionHandling()
-//                //没有权限，返回json
-//                .accessDeniedHandler((request,response,ex) -> {
-//                    response.setContentType("application/json;charset=utf-8");
-//                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//
-//                    PrintWriter out = response.getWriter();
-//                    Map<String,Object> map = new HashMap<String,Object>();
-//                    map.put("code",403);
-//                    map.put("message", "权限不足");
-//                    out.write(objectMapper.writeValueAsString(map));
-//                    out.flush();
-//                    out.close();
-//                })
+                .and()
+                .exceptionHandling()
+                //没有权限，返回json
+                .accessDeniedHandler((request,response,ex) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+                    PrintWriter out = response.getWriter();
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("code",403);
+                    map.put("message", "权限不足");
+                    out.write(objectMapper.writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                })
 
                 .and()
                 .logout()
@@ -185,7 +185,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/search/**");
         web.ignoring().antMatchers("/user/register");
+        web.ignoring().antMatchers("/user/saverecord_anonymous");
         web.ignoring().antMatchers("/actuator/**");
+        web.ignoring().antMatchers("/trend/get");
     }
 
     @Bean
