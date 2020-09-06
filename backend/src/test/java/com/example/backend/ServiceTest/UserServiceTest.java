@@ -19,8 +19,8 @@ public class UserServiceTest {
     @Transactional
     @Rollback(true)
     public void SaveRecordTest(){
-        Assertions.assertEquals(3, userService.
-                SaveRecord("855team","test1","test2").getQueryrecordList().size());
+        Assertions.assertEquals(27, userService.
+                SaveRecord("root","test1","test2").getQueryrecordList().size());
     }
 
     @Test
@@ -29,7 +29,17 @@ public class UserServiceTest {
     public void RegisterTest(){
         Assertions.assertAll(
                 ()->Assertions.assertTrue(userService.Register("test1","123123")>0),
-                ()->Assertions.assertEquals(0,userService.Register("855team","123123"))
+                ()->Assertions.assertEquals(0,userService.Register("root","123123"))
+        );
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void GrantTest(){
+        Assertions.assertAll(
+                ()->Assertions.assertEquals("ROLE_ADMIN",userService.Grant("test").getRole()),
+                ()->Assertions.assertEquals(null,userService.Grant("unexisted"))
         );
     }
 }

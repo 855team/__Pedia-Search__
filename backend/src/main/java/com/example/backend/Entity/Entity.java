@@ -34,39 +34,4 @@ public class Entity {
         this.weight = weight;
         this.entitySet = new HashSet<>();
     }
-
-//    public Long getId(){
-//        return this.id;
-//    }
-//    public void setId(Long id){
-//        this.id = id;
-//    }
-//
-//    public String getName(){
-//        return this.name;
-//    }
-//    public void setName(String name){
-//        this.name = name;
-//    }
-//
-//    public int getPage_id(){
-//        return this.page_id;
-//    }
-//    public void setPage_id(int page_id){
-//        this.page_id = page_id;
-//    }
-//
-//    public double getWeight(){
-//        return this.weight;
-//    }
-//    public void setWeight(double weight){
-//        this.weight = weight;
-//    }
-//
-//    public Set<Entity> getEntitySet(){
-//        return this.entitySet;
-//    }
-//    public void setEntitySet(Set<Entity> entitySet){
-//        this.entitySet = entitySet;
-//    }
 }

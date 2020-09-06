@@ -11,7 +11,7 @@ public interface TrendService {
 
     List<Trend> getTrend();
 
-    Trend recommendTrend(String keyword);
-
-    Trend banTrend(String keyword);
+//    Trend recommendTrend(String keyword);
+//
+//    Trend banTrend(String keyword);
 }
