@@ -34,7 +34,7 @@ class DashboardView extends React.Component{
                             style={{ height: '100%', borderRight: 0 }}
                         >
                             <SubMenu key="sub1" icon={<UserOutlined />} title="管理员面板">
-                                <Menu.Item key="2" onClick={this.toadmin.bind(this)}>权限管理</Menu.Item>
+                                <Menu.Item className="toadmin" key="2" onClick={this.toadmin.bind(this)}>权限管理</Menu.Item>
                                 <Menu.Item key="1" onClick={this.todashboard.bind(this)}>热点词条</Menu.Item>
                             </SubMenu>
                         </Menu>

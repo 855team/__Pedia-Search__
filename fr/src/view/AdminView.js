@@ -38,9 +38,9 @@ class AdminView extends React.Component{
                             defaultOpenKeys={['sub1']}
                             style={{ height: '100%', borderRight: 0 }}
                         >
-                            <SubMenu key="sub1" icon={<UserOutlined />} title="管理员面板">
-                                <Menu.Item key="1" onClick={this.toadmin.bind(this)}>成员管理</Menu.Item>
-                                <Menu.Item key="2" onClick={this.todashboard.bind(this)}>热点词条</Menu.Item>
+                            <SubMenu key="sub1" data-testid="label0" icon={<UserOutlined />} title="管理员面板">
+                                <Menu.Item key="1" data-testid="label1" onClick={this.toadmin.bind(this)}>成员管理</Menu.Item>
+                                <Menu.Item className="todashboard" data-testid="label2" key="2" onClick={this.todashboard.bind(this)}>热点词条</Menu.Item>
                             </SubMenu>
                         </Menu>
                     </Sider>
