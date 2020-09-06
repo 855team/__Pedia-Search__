@@ -6,6 +6,8 @@ import IndexView from "./view/IndexView";
 import ResultView from "./view/ResultView";
 import LoginView from "./view/LoginView";
 import RegisterView from "./view/RegiterView";
+import Dashboard from "./view/DashboardView";
+import AdminView from "./view/AdminView";
 
 /** 全局路由 **/
 class BasicRouter extends React.Component {
@@ -26,6 +28,8 @@ class BasicRouter extends React.Component {
                     <Route exact path="/search/:keyword" component={ ResultView }/>
                     <Route exact path="/login" component={LoginView}/>
                     <Route exact path="/register" component={RegisterView}/>
+                    <Route exact path="/dashboard" component={Dashboard}/>
+                    <Route exact path="/admin" component={AdminView}/>
                     <Redirect to="/index"/>
                 </Switch>
             </Router>

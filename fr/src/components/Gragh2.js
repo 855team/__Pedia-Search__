@@ -10,6 +10,7 @@ class Gragh2 extends Component {
 
     constructor(props){
         super(props);
+        console.log("all",this.props.data)
         this.state={
             data : this.props.data,
             t1_text : this.parsenode(),
@@ -216,7 +217,7 @@ class Gragh2 extends Component {
         edges_text.append('textPath')
             .attr('xlink:href', function (d, i) { return '#edgepath' + i })
             .style("pointer-events", "none")
-            .text(function (d) { return d.rela; });
+            //.text(function (d) { return d.rela; });
 
         function drag() {//拖拽函数
             return force.drag()
