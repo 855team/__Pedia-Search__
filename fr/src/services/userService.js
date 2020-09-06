@@ -4,7 +4,15 @@ import {message} from 'antd';
 import {Global} from "../utils/Global";
 import cookie from 'react-cookies'
 
-
+export const create = (data,callback) => {
+    const url = `http://49.235.245.206:8080/trend/create`;
+    message.config({
+        prefixCls: 'my-message',
+        className: 'my-message'
+    });
+    console.log("data:",data);
+    postRequest_v3(url, data, callback);
+};
 
 export const login = (data,his) => {
     const url = `http://49.235.245.206:8080/login`;
@@ -22,11 +30,18 @@ export const login = (data,his) => {
             Global.set('login',1);
             Global.setName(data.data.name);
             message.success(data.message);
-            his.push("/index");
+            if(data.data.authorities[0].authority=="ROLE_ADMIN"){
+                his.push("/admin")
+            }
+            else{
+                his.push("/index");
+            }
+
         }
     };
     postRequest_v3(url, data, callback);
 };
+
 
 export const register = (data,his) => {
     const url = `http://49.235.245.206:8080/user/register`;

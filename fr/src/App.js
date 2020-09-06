@@ -5,7 +5,9 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <BasicRouter/>
+        <React.StrictMode>
+            <BasicRouter/>
+        </React.StrictMode>
     </div>
   );
 }

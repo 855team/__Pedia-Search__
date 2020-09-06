@@ -279,9 +279,7 @@ class ResultView extends React.Component {
                 historyquery:data
             })
         }
-        if(Global.Islogin()){
-            queryrecord(callback2);
-        }
+        queryrecord(callback2);
         await this.postRequest(this.props.match.params.keyword);
     }
     showhistory(){
@@ -307,8 +305,10 @@ class ResultView extends React.Component {
             })
         };
         const callback2 = (json) => {
+            let title=json.title
+            let linked_words=json.linked_words.slice(0,15)
             this.setState({
-                relatedtags:json
+                relatedtags: {"title":title,"linked_words":linked_words}
             });
             this.setState({
                 gragh:0

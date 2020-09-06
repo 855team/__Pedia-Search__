@@ -13,6 +13,8 @@
     "antd": "^3.24.3",
     "cypress": "^4.11.0",
     "d3": "3.x",
+    "echarts": "^4.9.0",
+    "echarts-for-react": "^2.0.16",
     "history": "^5.0.0",
     "materialize-css": "^1.0.0",
     "react": "^16.13.1",
@@ -42,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "jest-environment-jsdom-sixteen": "^1.0.3"
   }
 }
