@@ -8,6 +8,7 @@ context('index', () => {
         cy.get('.login-form-button').click()
         cy.wait(500)
         cy.visit('localhost:3000/search/Reason')
+        cy.wait(500)
         cy.get('.dropdown').trigger('mouseover').get('.tologout').click()
         cy.get('.my-message').contains('退出成功')
         cy.title('localhost:3000/index')

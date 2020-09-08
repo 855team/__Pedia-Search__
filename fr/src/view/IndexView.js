@@ -16,6 +16,11 @@ import { Global } from "../utils/Global";
 import { Menu, Dropdown } from 'antd';
 import {logout,checklogin,queryrecord} from "../services/userService";
 import { Drawer, Button } from 'antd';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import {postRequest_v2} from "../utils/Ajax";
+
+
 
 /* 样式与theme相关的需要用 withStyles(theme => ({}))(xxx) 定义带样式的组件 */
 /** 搜索框，基于InputBase组件 **/
@@ -103,14 +108,13 @@ const CenterWrapper = withStyles((theme) => ({
     }
 }))(Paper);
 
-/* 样式与theme无关的使用类似css的格式搭配className属性定义样式  */
-const useStyles = {
-};
+const useStyles = null;
 
 /** 首页（一个巨大的搜索框）
  ** 布局：标题、搜索框
  **/
 class IndexView extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -118,7 +122,9 @@ class IndexView extends React.Component {
             theme: Global.get('theme'),
             searchText: '',
             visible:false,
-            historyquery:[]
+            historyquery:[],
+            open:false,
+            options:[]
         };
     }
     async componentDidMount() {
@@ -142,9 +148,7 @@ class IndexView extends React.Component {
                 historyquery:data
             })
         }
-        if(Global.Islogin()){
-            queryrecord(callback2);
-        }
+        queryrecord(callback2);
     }
     loggout(){
         logout(this.props.history)
@@ -162,7 +166,6 @@ class IndexView extends React.Component {
     }
 
     render() {
-
         const showDrawer = () => {
             this.setState({
                 visible:true
@@ -173,6 +176,60 @@ class IndexView extends React.Component {
                 visible:false
             })
         };
+        const handleMenuItemClick = (event, index) => {
+            this.setState({
+                searchText:this.state.options[index]
+            })
+        };
+        const elasticsearch=(keyword)=>{
+            const callback = (json) => {
+                let lst=[]
+                let allwords=json.hits.hits
+                for(let i=0;i<allwords.length;i++){
+                    lst.push(allwords[i]._source.title)
+                }
+                this.setState({
+                    options:lst
+                });
+            };
+            const _data=
+            {
+                "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "prefix": {
+                                "title.keyword": keyword
+                            }
+                        }
+                    ]
+                }
+            },
+                "size": 5
+            }
+            let postRequest = (url,data,callback) => {
+                console.log(data)
+                let opts={
+                    method: "POST",
+                    body: data,
+                    headers:{
+                        'Content-Type': "application/json"
+                    }
+                }
+
+                fetch(url,opts)
+                    .then((response)=>{
+                        return response.json()
+                    })
+                    .then((data)=>{
+                        callback(data);
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                    })
+            }
+            postRequest('http://49.235.245.206:9200/search/_search',JSON.stringify(_data), callback);
+        }
         const menu = (
             <Menu>
                 <Menu.Item>
@@ -187,6 +244,7 @@ class IndexView extends React.Component {
                 </Menu.Item>
             </Menu>
         );
+
         return (
             <ThemeProvider theme={ this.state.theme }>
                 <Container>
@@ -232,8 +290,19 @@ class IndexView extends React.Component {
                             value={ this.state.searchText }
                             onChange={(event) => {
                                 this.setState({
-                                    searchText: event.target.value
+                                    searchText: event.target.value,
                                 });
+                                elasticsearch(event.target.value)
+                                if(event.target.value){
+                                    this.setState({
+                                        open:true
+                                    });
+                                }
+                                else{
+                                    this.setState({
+                                        open:false
+                                    });
+                                }
                             }}
                             onKeyDown={(event) => {
                                 if (event.keyCode === 13) {
@@ -241,6 +310,19 @@ class IndexView extends React.Component {
                                 }
                             }}
                         />
+                        {this.state.open ? (
+                            <MenuList id="split-button-menu" style={{left:180}}>
+                                {this.state.options.map((option, index) => (
+                                    <MenuItem
+                                        key={option}
+                                        onClick={(event) => handleMenuItemClick(event, index)}
+                                        style={{color:"white",lineHeight:"100%"}}
+                                    >
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </MenuList>
+                        ) : null}
                     </CenterWrapper>
                 </Container>
             </ThemeProvider>

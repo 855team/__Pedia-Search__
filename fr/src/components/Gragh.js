@@ -11,15 +11,29 @@ const { Header, Footer, Sider, Content } = Layout;
 class Gragh extends Component {
     constructor(props){
         super(props);
-        this.state={
-            data: this.props.data,
-            originnode: this.parsenode(),
-            originlink : this.parselink(),
-            t1_text : this.parsenode(),
-            t2_text : this.parselink(),
-            title:"未选中节点",
-            content:""
+        if(this.props.data){
+            this.state={
+                data: this.props.data,
+                originnode: this.parsenode(),
+                originlink : this.parselink(),
+                t1_text : this.parsenode(),
+                t2_text : this.parselink(),
+                title:this.props.data.title,
+                content:this.props.data.text
+            }
         }
+        else{
+            this.state={
+                data: this.props.data,
+                originnode: this.parsenode(),
+                originlink : this.parselink(),
+                t1_text : this.parsenode(),
+                t2_text : this.parselink(),
+                title:null,
+                content:null
+            }
+        }
+
     }
     setcard=(title,content)=>{
         this.setState({
