@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@CacheConfig(cacheNames = "wikiResult")
+//@CacheConfig(cacheNames = "wikiResult")
 public class EntryServiceImpl implements EntryService {
     @Autowired
     private EntryDao entryDao;
 
     @Override
-    @Cacheable
+//    @Cacheable
     public Map<String,Object> findByTitle(String title){
         Entry entry = entryDao.findByTitle(title);
         Map<String,Object> map = new HashMap<>();
@@ -47,7 +47,7 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    @Cacheable
+//    @Cacheable
     public Map<String,Object> findByPage_id(int page_id){
         Entry entry = entryDao.findByPage_id(page_id);
         Map<String,Object> map = new HashMap<>();

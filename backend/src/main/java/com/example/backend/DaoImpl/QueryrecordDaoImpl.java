@@ -33,8 +33,7 @@ public class QueryrecordDaoImpl implements QueryrecordDao {
             mapList.add(map);
 
             if(mapList.size() == size)
-                break;
-        }
+                break; }
 
         return mapList;
     }
