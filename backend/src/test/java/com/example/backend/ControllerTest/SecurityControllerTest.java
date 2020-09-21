@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -45,7 +47,7 @@ public class SecurityControllerTest {
     @Test
     public void LoginSuccessTest() throws Exception{
         mockMvc
-                .perform(formLogin("/login").user("855team").password("123321"))
+                .perform(formLogin("/login").user("root").password("pedia_search"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(authenticated());
     }
@@ -59,10 +61,25 @@ public class SecurityControllerTest {
     }
 
     @Test
+    @Rollback(true)
+    @WithMockUser(username = "test",password = "123321",roles = "USER")
+    public void AccessDeniedTest() throws Exception{
+        RequestBuilder req = post("/user/grant")
+                .param("username","root")
+                .accept(MediaType.ALL)
+                .contentType(MediaType.ALL);
+
+        MvcResult result = mockMvc.perform(req)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(authenticated())
+                .andReturn();
+    }
+
+    @Test
     public void LogoutTest() throws Exception{
         MvcResult login_result = mockMvc.perform(
                 formLogin("/login")
-                .user("855team").password("123321"))
+                .user("root").password("pedia_search"))
                 .andReturn();
 
         MockHttpSession session = (MockHttpSession) login_result.getRequest().getSession();
@@ -87,8 +104,8 @@ public class SecurityControllerTest {
     @Test
     public void SessionInvalidationTest() throws Exception {
         MvcResult login_result = mockMvc.perform(post("/login")
-                .param("username","855team")
-                .param("password","123321"))
+                .param("username","root")
+                .param("password","pedia_search"))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
         MockHttpSession session = (MockHttpSession)
@@ -108,6 +125,5 @@ public class SecurityControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(unauthenticated())
                 .andReturn();
-
     }
 }

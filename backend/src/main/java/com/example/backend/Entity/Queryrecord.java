@@ -55,39 +55,4 @@ public class Queryrecord {
         this.last_keyword = last_keyword;
         this.queryTime = queryTime;
     }
-
-//    public int getQueryId(){
-//        return this.queryId;
-//    }
-//    public void setQueryId(int queryId){
-//        this.queryId = queryId;
-//    }
-//
-//    public int getUserId(){
-//        return this.userId;
-//    }
-//    public void setUserId(int userId){
-//        this.userId = userId;
-//    }
-//
-//    public String getKeyword(){
-//        return this.keyword;
-//    }
-//    public void setKeyword(String keyword){
-//        this.keyword = keyword;
-//    }
-//
-//    public String getLast_keyword(){
-//        return this.last_keyword;
-//    }
-//    public void setLast_keyword(String last_keyword){
-//        this.last_keyword = last_keyword;
-//    }
-//
-//    public Timestamp getQueryTime(){
-//        return this.queryTime;
-//    }
-//    public void setQueryTime(Timestamp queryTime){
-//        this.queryTime = queryTime;
-//    }
 }

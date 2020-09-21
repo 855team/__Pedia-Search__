@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-@CacheConfig(cacheNames = "relatedResult")
+//@CacheConfig(cacheNames = "relatedResult")
 public class EntityServiceImpl implements EntityService {
     @Autowired
     private EntityDao entityDao;
 
     @Override
-    @Cacheable
+//    @Cacheable()
     public Map<String,Object> findByKeyword(String keyword){
         Entity target = entityDao.findByName(keyword);
 

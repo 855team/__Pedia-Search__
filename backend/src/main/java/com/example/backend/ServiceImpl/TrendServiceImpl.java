@@ -27,7 +27,6 @@ public class TrendServiceImpl implements TrendService {
 
         for(Map<String,Object> map:mapList)
         {
-            System.out.println(map.get("times"));
             Trend newTrend = new Trend((String)map.get("keyword"),((Long)map.get("times")).intValue(),start,end,"RANK");
 
             trendDao.saveTrend(newTrend);
@@ -41,13 +40,13 @@ public class TrendServiceImpl implements TrendService {
         return trendDao.findAllOrderByTimes();
     }
 
-    @Override
-    public Trend recommendTrend(String keyword) {
-        return null;
-    }
-
-    @Override
-    public Trend banTrend(String keyword) {
-        return null;
-    }
+//    @Override
+//    public Trend recommendTrend(String keyword) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Trend banTrend(String keyword) {
+//        return null;
+//    }
 }

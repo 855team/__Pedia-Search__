@@ -1,6 +1,7 @@
 package com.example.backend.ControllerTest;
 
 import com.example.backend.Controller.UserController;
+import com.example.backend.Entity.User;
 import com.example.backend.Service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -95,7 +98,21 @@ public class UserControllerTest {
     }
 
     @Test
-    public void CheckLogin() throws Exception{
+    public void SaveRecord_rootTest() throws Exception{
+        RequestBuilder req = MockMvcRequestBuilders.post("/user/saverecord_anonymous")
+                .param("keyword","test1")
+                .param("last_keyword","test2")
+                .accept(MediaType.ALL)
+                .contentType(MediaType.ALL);
+
+        MvcResult result = mockMvc.perform(req)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void CheckLoginTest() throws Exception{
         RequestBuilder req = MockMvcRequestBuilders.post("/user/checklogin")
                 .principal(()-> "test")
                 .accept(MediaType.ALL)
@@ -105,5 +122,39 @@ public class UserControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
+    }
+
+    @Test
+    @WithMockUser(username = "root",password = "pedia_search",roles = "ADMIN")
+    public void GrantTest() throws Exception{
+        Assertions.assertAll(
+                ()->{
+                    RequestBuilder req = MockMvcRequestBuilders.post("/user/grant")
+                            .param("username","root")
+                            .accept(MediaType.ALL)
+                            .contentType(MediaType.ALL);
+
+                    when(userService.Grant("root"))
+                            .thenReturn(new User("root","pedia_search","ROLE_ADMIN"));
+
+                    MvcResult result = mockMvc.perform(req)
+                            .andDo(MockMvcResultHandlers.print())
+                            .andExpect(MockMvcResultMatchers.status().isOk())
+                            .andReturn();
+                },
+                ()->{
+                    RequestBuilder req = MockMvcRequestBuilders.post("/user/grant")
+                            .param("username","unexisted")
+                            .accept(MediaType.ALL)
+                            .contentType(MediaType.ALL);
+
+                    when(userService.Grant("unexisted")).thenReturn(null);
+
+                    MvcResult result = mockMvc.perform(req)
+                            .andDo(MockMvcResultHandlers.print())
+                            .andExpect(MockMvcResultMatchers.status().isOk())
+                            .andReturn();
+                }
+        );
     }
 }

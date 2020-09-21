@@ -20,25 +20,4 @@ public class Entry {
         this.page_id = page_id;
         this.sections = sections;
     }
-
-//    public String getTitle() {
-//        return title;
-//    }
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public int getPage_id(){
-//        return page_id;
-//    }
-//    public void setPage_id(int page_id){
-//        this.page_id = page_id;
-//    }
-//
-//    public BasicBSONObject getSections() {
-//        return sections;
-//    }
-//    public void setSections(BasicBSONObject sections) {
-//        this.sections = sections;
-//    }
 }

@@ -137,10 +137,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .invalidSessionStrategy((HttpServletRequest request, HttpServletResponse response) -> {
-//                    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-//                    System.out.println(ft.format(new Date())+" --- Session Timeout");
-
+                .invalidSessionStrategy((HttpServletRequest request, HttpServletResponse response)->{
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
@@ -172,7 +169,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.headers().addHeaderWriter((HttpServletRequest request, HttpServletResponse response) -> {
             response.setHeader("Access-Control-Allow-Credentials","true");
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+//            response.setHeader("Access-Control-Allow-Origin", "localhost:3000");
+            response.setHeader("Access-Control-Allow-Origin", "http://123.57.65.161:30100");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         });
         //开启跨域访问
@@ -183,11 +181,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/search/**");
-        web.ignoring().antMatchers("/user/register");
-        web.ignoring().antMatchers("/user/saverecord_anonymous");
-        web.ignoring().antMatchers("/actuator/**");
-        web.ignoring().antMatchers("/trend/get");
+        web.ignoring().antMatchers(
+                "/search/**",
+                "/user/register",
+                "/user/saverecord_anonymous",
+                "/actuator/**",
+                "/trend/get"
+                );
+//        web.ignoring().antMatchers("/favicon.ico");
+//        web.ignoring().antMatchers("/manifest.json");
     }
 
     @Bean

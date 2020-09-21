@@ -14,10 +14,10 @@ public class TrendDaoImpl implements TrendDao{
     @Autowired
     private TrendRepository trendRepository;
 
-    @Override
-    public List<Trend> findByType(String type){
-        return trendRepository.findByType(type);
-    }
+//    @Override
+//    public List<Trend> findByType(String type){
+//        return trendRepository.findByType(type);
+//    }
 
     @Override
     public List<Trend> findAllOrderByTimes() {

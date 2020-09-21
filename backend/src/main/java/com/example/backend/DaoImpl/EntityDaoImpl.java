@@ -13,7 +13,6 @@ public class EntityDaoImpl implements EntityDao {
 
     @Override
     public Entity findByName(String name){
-        Entity entity = entityRepository.findByName(name);
-        return entity;
+        return entityRepository.findByName(name);
     }
 }

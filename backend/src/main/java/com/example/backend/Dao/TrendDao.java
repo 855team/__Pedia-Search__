@@ -5,7 +5,7 @@ import com.example.backend.Entity.Trend;
 import java.util.List;
 
 public interface TrendDao {
-    List<Trend> findByType(String type);
+//    List<Trend> findByType(String type);
 
     List<Trend> findAllOrderByTimes();
 
